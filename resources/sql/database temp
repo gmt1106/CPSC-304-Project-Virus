@@ -1,0 +1,171 @@
+DROP TABLE Place;
+DROP TABLE PostalCodeCityProvince;
+DROP TABLE Includes;
+DROP TABLE Person;
+DROP TABLE Timeframe;
+DROP TABLE RoutePerson_WentAt
+DROP TABLE Virus;
+DROP TABLE Cure;
+DROP TABLE Kills;
+DROP TABLE Has;
+DROP TABLE Infects;
+DROP TABLE InfectedLivesIn;
+DROP TABLE NotInfected;
+DROP TABLE DoctorCountry;
+DROP TABLE Doctor;
+DROP TABLE Medicine;
+DROP TABLE Treats;
+DROP TABLE Route;
+DROP TABLE Country;
+
+
+CREATE TABLE Country (
+    name char(10) PRIMARY KEY
+);
+
+CREATE TABLE Place (
+	name CHAR(20),
+    houseNum INTEGER,
+	streetName CHAR(20),
+	postalCode CHAR(10),
+	cname CHAR(20),
+	PRIMARY KEY (houseNum, streetName, postalCode, cname),
+	FOREIGN KEY (cname) REFERENCES Country (name) ON DELETE CASCADE
+);
+
+CREATE TABLE PostalCodeCityProvince (
+	postalCode CHAR(10) PRIMARY KEY,
+	city CHAR(10),
+	province CHAR(10)
+	FOREIGN KEY (postalCode) REFERENCES Place ON DELETE CASCADE
+);
+
+CREATE TABLE Route (
+	routeID INTEGER PRIMARY KEY
+);
+
+CREATE TABLE Includes (
+	houseNum INTEGER,
+	streetName CHAR(20),
+	postalCode CHAR(10),
+	cname CHAR(20),
+	routeID INTEGER,
+	time TIMESTAMP,
+	PRIMARY KEY (houseNum, streetName, postalCode, cname, routeID),
+	FOREIGN KEY (houseNum, streetName, postalCode) REFERENCES Place,
+	FOREIGN KEY (cname) REFERENCES Country (name),
+	FOREIGN KEY (routeID) REFERENCES Route
+);
+
+CREATE TABLE Person (
+	nationality CHAR(10),
+	sinum INTEGER,
+	name CHAR(20),
+	PRIMARY KEY (nationality, sinum)
+);
+
+CREATE TABLE Timeframe (
+	startTime TIMESTAMP,
+	endTime TIMESTAMP,
+	PRIMARY KEY (startTime, endTime)
+);
+
+CREATE TABLE RoutePerson_WentAt(
+	startTime TIMESTAMP NOT NULL,
+	endTime TIMESTAMP NOT NULL,
+	routeID INTEGER,
+	nationality CHAR(10),
+	sinum INTEGER,
+	PRIMARY KEY (routeID, nationality, sinum),
+	FOREIGN KEY (startTime, endTime) REFERENCES Timeframe,
+	FOREIGN KEY (routeID) REFERENCES Route,
+	FOREIGN KEY (nationality, sinum) REFERENCES Person
+);
+
+CREATE TABLE Virus (
+    virusID int PRIMARY KEY, name char(20), startDate Date
+);
+
+CREATE TABLE Cure (
+    medicineID int PRIMARY KEY
+);
+
+CREATE TABLE Kills (
+    medicineID int,
+    virusID int,
+    PRIMARY KEY(medicineID, virusID),
+    FOREIGN KEY (medicineID) REFERENCES Cure ON DELETE cascade ON UPDATE cascade,
+    FOREIGN KEY (virusID) REFERENCES  Virus ON DELETE cascade ON UPDATE cascade
+);
+
+CREATE TABLE Has (
+    cname char(10),
+    medicineID int,
+    PRIMARY KEY (cname, medicineID),
+    FOREIGN KEY (cname) REFERENCES Country (name) ON DELETE cascade ON UPDATE cascade,
+    FOREIGN KEY (medicineID) REFERENCES Cure ON DELETE cascade ON UPDATE cascade
+);
+
+CREATE TABLE Infects (
+    virusID int,
+    sinum int,
+    nationality char(10),
+	PRIMARY KEY (virusID, nationality, sinum),
+	FOREIGN KEY (virusID) REFERENCES Virus ON DELETE cascade ON UPDATE cascade,
+    FOREIGN KEY (nationality, sinum) REFERENCES InfectedLivesIn ON DELETE cascade ON UPDATE cascade
+);
+
+
+CREATE TABLE InfectedLivesIn (
+    nationality char(10),
+    sinum int,
+    cname char(10) NOT NULL,
+    PRIMARY KEY (nationality, sinum),
+    FOREIGN KEY (cname) REFERENCES Country (name) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE NotInfected (
+    nationality char(10),
+    sinum int,
+    PRIMARY KEY (nationality, sinum)
+);
+
+CREATE TABLE DoctorCountry (
+    workplaceAddress char(70) PRIMARY KEY,
+    cname char(10) NOT NULL,
+    FOREIGN KEY (cname) REFERENCES Country (name) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Doctor (
+    doctorID int PRIMARY KEY,
+    dname char(20),
+    specialization char(15),
+    workplaceAddress char(70) NOT NULL,
+    FOREIGN KEY (workplaceAddress) REFERENCES DoctorCountry ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Medicine (
+    medicineID int PRIMARY KEY,
+    name char(20)
+);
+
+CREATE TABLE Treats (
+    doctorID int,
+    medicineID int,
+    nationality char(10),
+    sinum int,
+    PRIMARY KEY (doctorID, medicineID, nationality, sinum),
+    FOREIGN KEY (doctorID) REFERENCES Doctor ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (medicineID) REFERENCES Medicine ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (nationality, sinum) REFERENCES InfectedLivesIn ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO Place VALUES ("UBC Nest", 6133, "University Blvd", "V6T 1Z1", "Canada");
+
+INSERT INTO Place VALUES ("CN Tower", 290, "Bremner Blvd", "M5V 3L9", "Canada");
+
+INSERT INTO Place VALUES ("Vancouver Aquarium", 845, "Avison Way", "V6G 3E2", "Canada");
+
+INSERT INTO Place VALUES ("Pacific Center", 701, "W Georgia St", "V7Y 1G5", "Canada");
+
+INSERT INTO Place VALUES ("Calgary International Airport", 2000, "Airport Rd NE", "T2E 6W5", "Canada");
