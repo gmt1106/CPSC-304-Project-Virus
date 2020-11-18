@@ -18,9 +18,12 @@ public class SearchOutput extends JFrame{
         outputTable = new JTable(data, columnNames);
         outputTable.setBounds(30, 40, 200, 300);
 
-        // adding it to JScrollPane
-        JScrollPane scrollPane = new JScrollPane(outputTable);
-        searchOutput.add(scrollPane);
+        //add the table to the frame
+        this.add(new JScrollPane(outputTable));
+        this.setTitle("Result Table");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.pack();
+        this.setVisible(true);
 
     }
 }

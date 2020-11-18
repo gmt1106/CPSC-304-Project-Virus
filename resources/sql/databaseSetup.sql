@@ -7,16 +7,16 @@ CREATE TABLE Country (
 );
 
 CREATE TABLE Place (
-	name CHAR(20),
+	name CHAR(30),
     houseNum INTEGER,
 	streetName CHAR(20),
 	postalCode CHAR(10),
-	cname CHAR(20),
+	cname CHAR(10),
 	PRIMARY KEY (houseNum, streetName, postalCode, cname),
 	FOREIGN KEY (cname) REFERENCES Country (name) ON DELETE CASCADE
 );
 
-ALTER USER <ora_gmt1106> quota unlimited on USERS;
+INSERT INTO Country VALUES ('Canada');
 
 INSERT INTO Place VALUES ('UBC Nest', 6133, 'University Blvd', 'V6T 1Z1', 'Canada');
 
