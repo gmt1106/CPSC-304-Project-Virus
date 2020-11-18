@@ -1,6 +1,6 @@
 package model;
 
-public class RoutePerson_WentAt {
+public class RoutePerson_WentAt implements Model {
     private final String startTime;
     private final String endTime;
     private final int routeID;

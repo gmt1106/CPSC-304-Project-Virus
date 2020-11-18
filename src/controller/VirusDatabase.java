@@ -1,7 +1,9 @@
 package controller;
 
 import database.DatabaseConnectionHandler;
+import model.Country;
 import model.Place;
+import model.Route;
 import org.apache.ibatis.session.SqlSessionException;
 
 import java.sql.SQLException;
@@ -37,5 +39,15 @@ public class VirusDatabase {
     public Place[] getPlaceInfo() {
 
         return dbHandler.getPlaceInfo();
+    }
+
+    public void insertPlace(Place place) {
+
+        dbHandler.insertPlace(place);
+    }
+
+    public Country[] getCountryInfo() {
+
+        return dbHandler.getCountryInfo();
     }
 }

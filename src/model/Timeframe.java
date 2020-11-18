@@ -1,6 +1,6 @@
 package model;
 
-public class Timeframe {
+public class Timeframe implements Model{
     private final String startTime;
     private final String endTime;
 

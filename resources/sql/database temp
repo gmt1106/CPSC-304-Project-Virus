@@ -33,16 +33,38 @@ CREATE TABLE Place (
 	FOREIGN KEY (cname) REFERENCES Country (name) ON DELETE CASCADE
 );
 
+
 CREATE TABLE PostalCodeCityProvince (
 	postalCode CHAR(10) PRIMARY KEY,
 	city CHAR(10),
-	province CHAR(10)
-	FOREIGN KEY (postalCode) REFERENCES Place ON DELETE CASCADE
+	province CHAR(10),
+	FOREIGN KEY (postalCode) REFERENCES Place
+	    ON DELETE CASCADE
 );
+
+INSERT INTO PostalCodeCityProvince VALUES ('V6T 1Z1', 'Vancouver', 'BC');
+
+INSERT INTO PostalCodeCityProvince VALUES ('M5V 3L9', 'Toronto', 'ON');
+
+INSERT INTO PostalCodeCityProvince VALUES ('V6G 3E2', 'Vancouver', 'BC');
+
+INSERT INTO PostalCodeCityProvince VALUES ('V7Y 1G5', 'Vancouver', 'BC');
+
+INSERT INTO PostalCodeCityProvince VALUES ('T2E 6W5', 'Calgary', 'AB');
 
 CREATE TABLE Route (
 	routeID INTEGER PRIMARY KEY
 );
+
+INSERT INTO Route VALUES (5);
+
+INSERT INTO Route VALUES (11);
+
+INSERT INTO Route VALUES (23);
+
+INSERT INTO Route VALUES (31);
+
+INSERT INTO Route VALUES (47);
 
 CREATE TABLE Includes (
 	houseNum INTEGER,
@@ -51,11 +73,23 @@ CREATE TABLE Includes (
 	cname CHAR(20),
 	routeID INTEGER,
 	time TIMESTAMP,
-	PRIMARY KEY (houseNum, streetName, postalCode, cname, routeID),
-	FOREIGN KEY (houseNum, streetName, postalCode) REFERENCES Place,
-	FOREIGN KEY (cname) REFERENCES Country (name),
+	PRIMARY KEY (houseNum, streetName, postalCode, cname, routeID)
+	FOREIGN KEY (houseNum, streetName, postalCode) REFERENCES Place
+	FOREIGN KEY (cname) REFERENCES Country (name)
 	FOREIGN KEY (routeID) REFERENCES Route
 );
+
+INSERT INTO Includes VALUES (6133, 'University Blvd', 'V6T 1Z1', 'Canada', 5, '2020-09-21 17:00:00.00');
+
+INSERT INTO Includes VALUES (701, 'W Georgia St', 'V7Y 1G5', 'Canada', 5, '2020-09-21 18:30:00.25');
+
+INSERT INTO Includes VALUES (290, 'Bremner Blvd', 'M5V 3L9', 'Canada', 11, '2020-10-21 18:52:21.00');
+
+INSERT INTO Includes VALUES  (2000, 'Airport Rd NE', 'T2E 6W5', 'Canada', 23, '2020-05-17 02:54:00:00');
+
+INSERT INTO Includes VALUES (845, 'Avison Way', 'T2E 6W5', 'Canada', 31, '2020-07-15 05:11:00.00');
+
+INSERT INTO Includes VALUES (2000, 'Airport Rd NE', 'T2E 6W5', 'Canada', 47, '2020-05-17 19:54:30.00');
 
 CREATE TABLE Person (
 	nationality CHAR(10),
@@ -64,11 +98,41 @@ CREATE TABLE Person (
 	PRIMARY KEY (nationality, sinum)
 );
 
+INSERT INTO Person VALUES ('Canadian', 11111111, 'John Smith');
+
+INSERT INTO Person VALUES ('American', 11111111, 'Daniel Jones');
+
+INSERT INTO Person VALUES ('Portuguese', 22222222, 'Christiano Ronaldo');
+
+INSERT INTO Person VALUES ('American', 33333333, 'Jay Park');
+
+INSERT INTO Person VALUES ('Argentinian', 44444444, 'Lionel Messi');
+
+INSERT INTO Person VALUES ('Chinese', 55555555, 'Alex Smith');
+
+INSERT INTO Person VALUES ('Italian', 66666666, 'Charlies Martin');
+
+INSERT INTO Person VALUES ('French', 77777777, 'Ian Chinook');
+
+INSERT INTO Person VALUES ('English', 88888888, 'James Solibon');
+
+INSERT INTO Person VALUES ('Mexican', 99999999, 'Megan Hell');
+
 CREATE TABLE Timeframe (
 	startTime TIMESTAMP,
 	endTime TIMESTAMP,
 	PRIMARY KEY (startTime, endTime)
 );
+
+INSERT INTO Timeframe Values ('2020-05-15 15:00:00.00', '2020-05-16 08:00:00.00');
+
+INSERT INTO Timeframe Values ('2020-05-17 10:00:00.00', '2020-05-18 16:00:00.00');
+
+INSERT INTO Timeframe Values ('2020-05-13 12:00:00', '2020-05-13 19:00:00.00');
+
+INSERT INTO Timeframe Values ('2020-05-18 12:00:00', '2020-05-19 23:00:00.00');
+
+INSERT INTO Timeframe Values ('2020-05-18 06:00:00.00', '2020-05-18 14:00:00.00');
 
 CREATE TABLE RoutePerson_WentAt(
 	startTime TIMESTAMP NOT NULL,
@@ -76,96 +140,18 @@ CREATE TABLE RoutePerson_WentAt(
 	routeID INTEGER,
 	nationality CHAR(10),
 	sinum INTEGER,
-	PRIMARY KEY (routeID, nationality, sinum),
-	FOREIGN KEY (startTime, endTime) REFERENCES Timeframe,
-	FOREIGN KEY (routeID) REFERENCES Route,
+	PRIMARY KEY (routeID, nationality, sinum)
+	FOREIGN KEY (startTime, endTime) REFERENCES Timeframe
+	FOREIGN KEY (routeID) REFERENCES Route
 	FOREIGN KEY (nationality, sinum) REFERENCES Person
 );
 
-CREATE TABLE Virus (
-    virusID int PRIMARY KEY, name char(20), startDate Date
-);
+INSERT INTO RoutePerson_WentAt Values ('2020-05-15 15:00:00.00', '2020-05-16 08:00:00.00', 5, 'Canadian', 11111111);
 
-CREATE TABLE Cure (
-    medicineID int PRIMARY KEY
-);
+INSERT INTO RoutePerson_WentAt Values ('2020-05-17 10:00:00.00', '2020-05-18 16:00:00.00', 11, 'American', 11111111);
 
-CREATE TABLE Kills (
-    medicineID int,
-    virusID int,
-    PRIMARY KEY(medicineID, virusID),
-    FOREIGN KEY (medicineID) REFERENCES Cure ON DELETE cascade ON UPDATE cascade,
-    FOREIGN KEY (virusID) REFERENCES  Virus ON DELETE cascade ON UPDATE cascade
-);
+INSERT INTO RoutePerson_WentAt Values ('2020-05-13 12:00:00.00', '2020-05-13 19:00:00.00', 23, 'Portuguese', 22222222);
 
-CREATE TABLE Has (
-    cname char(10),
-    medicineID int,
-    PRIMARY KEY (cname, medicineID),
-    FOREIGN KEY (cname) REFERENCES Country (name) ON DELETE cascade ON UPDATE cascade,
-    FOREIGN KEY (medicineID) REFERENCES Cure ON DELETE cascade ON UPDATE cascade
-);
+INSERT INTO RoutePerson_WentAt Values ('2020-05-18 12:00:00.00', '2020-05-19 23:00:00.00', 31, 'American', 33333333);
 
-CREATE TABLE Infects (
-    virusID int,
-    sinum int,
-    nationality char(10),
-	PRIMARY KEY (virusID, nationality, sinum),
-	FOREIGN KEY (virusID) REFERENCES Virus ON DELETE cascade ON UPDATE cascade,
-    FOREIGN KEY (nationality, sinum) REFERENCES InfectedLivesIn ON DELETE cascade ON UPDATE cascade
-);
-
-
-CREATE TABLE InfectedLivesIn (
-    nationality char(10),
-    sinum int,
-    cname char(10) NOT NULL,
-    PRIMARY KEY (nationality, sinum),
-    FOREIGN KEY (cname) REFERENCES Country (name) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE NotInfected (
-    nationality char(10),
-    sinum int,
-    PRIMARY KEY (nationality, sinum)
-);
-
-CREATE TABLE DoctorCountry (
-    workplaceAddress char(70) PRIMARY KEY,
-    cname char(10) NOT NULL,
-    FOREIGN KEY (cname) REFERENCES Country (name) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE Doctor (
-    doctorID int PRIMARY KEY,
-    dname char(20),
-    specialization char(15),
-    workplaceAddress char(70) NOT NULL,
-    FOREIGN KEY (workplaceAddress) REFERENCES DoctorCountry ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE Medicine (
-    medicineID int PRIMARY KEY,
-    name char(20)
-);
-
-CREATE TABLE Treats (
-    doctorID int,
-    medicineID int,
-    nationality char(10),
-    sinum int,
-    PRIMARY KEY (doctorID, medicineID, nationality, sinum),
-    FOREIGN KEY (doctorID) REFERENCES Doctor ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (medicineID) REFERENCES Medicine ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (nationality, sinum) REFERENCES InfectedLivesIn ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-INSERT INTO Place VALUES ("UBC Nest", 6133, "University Blvd", "V6T 1Z1", "Canada");
-
-INSERT INTO Place VALUES ("CN Tower", 290, "Bremner Blvd", "M5V 3L9", "Canada");
-
-INSERT INTO Place VALUES ("Vancouver Aquarium", 845, "Avison Way", "V6G 3E2", "Canada");
-
-INSERT INTO Place VALUES ("Pacific Center", 701, "W Georgia St", "V7Y 1G5", "Canada");
-
-INSERT INTO Place VALUES ("Calgary International Airport", 2000, "Airport Rd NE", "T2E 6W5", "Canada");
+INSERT INTO RoutePerson_WentAt Values ('2020-05-18 06:00:00.00', '2020-05-18 14:00:00.00', 47, 'Argentinian', 44444444);

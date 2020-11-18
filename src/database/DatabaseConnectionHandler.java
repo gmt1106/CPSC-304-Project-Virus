@@ -1,7 +1,9 @@
 package database;
 
 
+import model.Country;
 import model.Place;
+import model.Route;
 import oracle.jdbc.driver.SQLUtil;
 
 import java.io.File;
@@ -87,17 +89,7 @@ public class DatabaseConnectionHandler {
 
         try {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM Place WHERE name = ? AND houseNum = ? AND streetName = ? AND postalCode = ? AND cname = ?");
-                /*
-                CREATE TABLE Place (
-                        name CHAR(20),
-                        houseNum INTEGER,
-                        streetName CHAR(20),
-                        postalCode CHAR(10),
-                        cname CHAR(20),
-                        PRIMARY KEY (houseNum, streetName, postalCode, cname)
-                        FOREIGN KEY (cname) REFERENCES Country (name), ON DELETE CASCADE
-                );
-                */
+
             ps.setString(1, name);
             ps.setInt(2, houseNum);
             ps.setString(3, streetName);
@@ -119,7 +111,15 @@ public class DatabaseConnectionHandler {
 
     public void insertPlace (Place place) {
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO Place VALUES (?,?,?,?,?)");
+
+            //insert the routeID first in the Route table
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO Country VALUES (?)");
+            ps.setString(1, place.getCname());
+
+            ps.executeUpdate();
+
+            //Then insert the info into Place table
+            ps = connection.prepareStatement("INSERT INTO Place VALUES (?,?,?,?,?)");
 
             ps.setString(1, place.getName());
             ps.setInt(2, place.getHouseNum());
@@ -160,5 +160,27 @@ public class DatabaseConnectionHandler {
         }
 
         return result.toArray(new Place[result.size()]);
+    }
+
+    public Country[] getCountryInfo() {
+
+        ArrayList<Country> result = new ArrayList<Country>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Country");
+
+            while(rs.next()) {
+                Country country = new Country(rs.getString("name"));
+                result.add(country);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new Country[result.size()]);
     }
 }

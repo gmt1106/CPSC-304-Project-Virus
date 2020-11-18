@@ -1,6 +1,6 @@
 package model;
 
-public class Person {
+public class Person implements Model {
     private final String nationality;
     private final int sinum;
     private final String name;
