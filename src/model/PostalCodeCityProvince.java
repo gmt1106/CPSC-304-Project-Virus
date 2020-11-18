@@ -1,6 +1,6 @@
 package model;
 
-public class PostalCodeCityProvince {
+public class PostalCodeCityProvince implements Model {
 
     private final String postalCode;
     private final String city;

@@ -1,6 +1,8 @@
 package model;
 
-public class Includes {
+import javax.jws.WebParam;
+
+public class Includes implements Model{
     private final int houseNum;
     private final String streetName;
     private final String postalCode;

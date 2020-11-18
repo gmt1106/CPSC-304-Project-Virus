@@ -1,6 +1,6 @@
 package model;
 
-public class Route {
+public class Route implements Model {
     private final int routeID;
 
     public Route(int routeID) {

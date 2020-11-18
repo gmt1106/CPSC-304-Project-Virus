@@ -16,7 +16,7 @@ public class SearchOutput extends JFrame{
 
         // Initializing the JTable
         outputTable = new JTable(data, columnNames);
-        outputTable.setBounds(30, 40, 200, 300);
+        outputTable.setBounds(60, 40, 1200, 400);
 
         //add the table to the frame
         this.add(new JScrollPane(outputTable));
