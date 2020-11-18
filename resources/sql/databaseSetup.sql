@@ -27,3 +27,125 @@ INSERT INTO Place VALUES ('Vancouver Aquarium', 845, 'Avison Way', 'V6G 3E2', 'C
 INSERT INTO Place VALUES ('Pacific Center', 701, 'W Georgia St', 'V7Y 1G5', 'Canada');
 
 INSERT INTO Place VALUES ('Calgary International Airport', 2000, 'Airport Rd NE', 'T2E 6W5', 'Canada');
+
+CREATE TABLE PostalCodeCityProvince (
+	postalCode CHAR(10) PRIMARY KEY,
+	city CHAR(10),
+	province CHAR(10),
+	FOREIGN KEY (postalCode) REFERENCES Place
+	    ON DELETE CASCADE
+);
+
+INSERT INTO PostalCodeCityProvince VALUES ('V6T 1Z1', 'Vancouver', 'BC');
+
+INSERT INTO PostalCodeCityProvince VALUES ('M5V 3L9', 'Toronto', 'ON');
+
+INSERT INTO PostalCodeCityProvince VALUES ('V6G 3E2', 'Vancouver', 'BC');
+
+INSERT INTO PostalCodeCityProvince VALUES ('V7Y 1G5', 'Vancouver', 'BC');
+
+INSERT INTO PostalCodeCityProvince VALUES ('T2E 6W5', 'Calgary', 'AB');
+
+CREATE TABLE Route (
+	routeID INTEGER PRIMARY KEY
+);
+
+INSERT INTO Route VALUES (5);
+
+INSERT INTO Route VALUES (11);
+
+INSERT INTO Route VALUES (23);
+
+INSERT INTO Route VALUES (31);
+
+INSERT INTO Route VALUES (47);
+
+CREATE TABLE Includes (
+	houseNum INTEGER,
+	streetName CHAR(20),
+	postalCode CHAR(10),
+	cname CHAR(20),
+	routeID INTEGER,
+	time TIMESTAMP,
+	PRIMARY KEY (houseNum, streetName, postalCode, cname, routeID)
+	FOREIGN KEY (houseNum, streetName, postalCode) REFERENCES Place
+	FOREIGN KEY (cname) REFERENCES Country (name)
+	FOREIGN KEY (routeID) REFERENCES Route
+);
+
+INSERT INTO Includes VALUES (6133, 'University Blvd', 'V6T 1Z1', 'Canada', 5, '2020-09-21 17:00:00.00');
+
+INSERT INTO Includes VALUES (701, 'W Georgia St', 'V7Y 1G5', 'Canada', 5, '2020-09-21 18:30:00.25');
+
+INSERT INTO Includes VALUES (290, 'Bremner Blvd', 'M5V 3L9', 'Canada', 11, '2020-10-21 18:52:21.00');
+
+INSERT INTO Includes VALUES  (2000, 'Airport Rd NE', 'T2E 6W5', 'Canada', 23, '2020-05-17 02:54:00:00');
+
+INSERT INTO Includes VALUES (845, 'Avison Way', 'T2E 6W5', 'Canada', 31, '2020-07-15 05:11:00.00');
+
+INSERT INTO Includes VALUES (2000, 'Airport Rd NE', 'T2E 6W5', 'Canada', 47, '2020-05-17 19:54:30.00');
+
+CREATE TABLE Person (
+	nationality CHAR(10),
+	sinum INTEGER,
+	name CHAR(20),
+	PRIMARY KEY (nationality, sinum)
+);
+
+INSERT INTO Person VALUES ('Canadian', 11111111, 'John Smith');
+
+INSERT INTO Person VALUES ('American', 11111111, 'Daniel Jones');
+
+INSERT INTO Person VALUES ('Portuguese', 22222222, 'Christiano Ronaldo');
+
+INSERT INTO Person VALUES ('American', 33333333, 'Jay Park');
+
+INSERT INTO Person VALUES ('Argentinian', 44444444, 'Lionel Messi');
+
+INSERT INTO Person VALUES ('Chinese', 55555555, 'Alex Smith');
+
+INSERT INTO Person VALUES ('Italian', 66666666, 'Charlies Martin');
+
+INSERT INTO Person VALUES ('French', 77777777, 'Ian Chinook');
+
+INSERT INTO Person VALUES ('English', 88888888, 'James Solibon');
+
+INSERT INTO Person VALUES ('Mexican', 99999999, 'Megan Hell');
+
+CREATE TABLE Timeframe (
+	startTime TIMESTAMP,
+	endTime TIMESTAMP,
+	PRIMARY KEY (startTime, endTime)
+);
+
+INSERT INTO Timeframe Values ('2020-05-15 15:00:00.00', '2020-05-16 08:00:00.00');
+
+INSERT INTO Timeframe Values ('2020-05-17 10:00:00.00', '2020-05-18 16:00:00.00');
+
+INSERT INTO Timeframe Values ('2020-05-13 12:00:00', '2020-05-13 19:00:00.00');
+
+INSERT INTO Timeframe Values ('2020-05-18 12:00:00', '2020-05-19 23:00:00.00');
+
+INSERT INTO Timeframe Values ('2020-05-18 06:00:00.00', '2020-05-18 14:00:00.00');
+
+CREATE TABLE RoutePerson_WentAt(
+	startTime TIMESTAMP NOT NULL,
+	endTime TIMESTAMP NOT NULL,
+	routeID INTEGER,
+	nationality CHAR(10),
+	sinum INTEGER,
+	PRIMARY KEY (routeID, nationality, sinum)
+	FOREIGN KEY (startTime, endTime) REFERENCES Timeframe
+	FOREIGN KEY (routeID) REFERENCES Route
+	FOREIGN KEY (nationality, sinum) REFERENCES Person
+);
+
+INSERT INTO RoutePerson_WentAt Values ('2020-05-15 15:00:00.00', '2020-05-16 08:00:00.00', 5, 'Canadian', 11111111);
+
+INSERT INTO RoutePerson_WentAt Values ('2020-05-17 10:00:00.00', '2020-05-18 16:00:00.00', 11, 'American', 11111111);
+
+INSERT INTO RoutePerson_WentAt Values ('2020-05-13 12:00:00.00', '2020-05-13 19:00:00.00', 23, 'Portuguese', 22222222);
+
+INSERT INTO RoutePerson_WentAt Values ('2020-05-18 12:00:00.00', '2020-05-19 23:00:00.00', 31, 'American', 33333333);
+
+INSERT INTO RoutePerson_WentAt Values ('2020-05-18 06:00:00.00', '2020-05-18 14:00:00.00', 47, 'Argentinian', 44444444);
