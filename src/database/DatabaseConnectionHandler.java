@@ -142,7 +142,7 @@ public class DatabaseConnectionHandler {
 
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM branch");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Place");
 
             while(rs.next()) {
                 Place place = new Place(rs.getString("name"),

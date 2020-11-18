@@ -41,9 +41,9 @@ public class DatabaseDialog extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 Place[] result = virusDatabase.getPlaceInfo();
-                String[][] data = new String[0][0];
 
                 if (result.length != 0) {
+                    String[][] data = new String[result.length][];
                     for (int i = 0; i < result.length; i++) {
                         data[i] = result[i].tupleToListOfString();
                     }
@@ -60,10 +60,5 @@ public class DatabaseDialog extends JFrame {
         searchOutput = new SearchOutput(virusDatabase, data, columnNames);
         searchOutput.add(searchOutput.searchOutput);
 
-        searchOutput.setVisible(true);
-        searchOutput.setTitle("Virus Database");
-        searchOutput.setDefaultCloseOperation(searchOutput.EXIT_ON_CLOSE);
-        searchOutput.setSize(900, 900);
-        searchOutput.setVisible(true);
     }
 }
