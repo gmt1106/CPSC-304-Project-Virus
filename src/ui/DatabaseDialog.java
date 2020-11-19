@@ -29,6 +29,16 @@ public class DatabaseDialog extends JFrame {
     private JTextField nameTextFieldFromCountry;
     private JButton submitCountryData;
     private JButton showCountryTable;
+    private JButton showPersonTable;
+    private JTextField nationalityField_Person;
+    private JTextField visitedRouteField_Person;
+    private JTextField startingAtField_Person;
+    private JTextField endingAtField_Person;
+    private JButton searchPerson;
+    private JTextField sinumField_Person;
+    private JButton updateRouteButton;
+    private JTextField startedAfterField_Person;
+    private JButton searchVirus;
 
     public DatabaseDialog(VirusDatabase virusDatabase)  {
 
@@ -101,5 +111,9 @@ public class DatabaseDialog extends JFrame {
         searchOutput = new SearchOutput(virusDatabase, data, columnNames);
         searchOutput.add(searchOutput.searchOutput);
 
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 }

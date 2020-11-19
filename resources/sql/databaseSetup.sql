@@ -2,6 +2,9 @@ DROP TABLE Includes;
 DROP TABLE Place;
 DROP TABLE Country;
 DROP TABLE Route;
+DROP TABLE RoutePerson_WentAt;
+DROP TABLE Person;
+DROP TABLE Timeframe;
 
 
 CREATE TABLE Country (
@@ -34,6 +37,31 @@ CREATE TABLE Includes (
 	FOREIGN KEY (routeID) REFERENCES Route (routeID)
 );
 
+CREATE TABLE Person (
+	nationality CHAR(10),
+	sinum INTEGER,
+	name CHAR(20),
+	PRIMARY KEY (nationality, sinum)
+);
+
+CREATE TABLE Timeframe (
+	startTime TIMESTAMP,
+	endTime TIMESTAMP,
+	PRIMARY KEY (startTime, endTime)
+);
+
+CREATE TABLE RoutePerson_WentAt(
+	startTime TIMESTAMP NOT NULL,
+	endTime TIMESTAMP NOT NULL,
+	routeID INTEGER,
+	nationality CHAR(10),
+	sinum INTEGER,
+	PRIMARY KEY (routeID, nationality, sinum),
+	FOREIGN KEY (startTime, endTime) REFERENCES Timeframe (startTime, endTime),
+	FOREIGN KEY (routeID) REFERENCES Route (routeID),
+	FOREIGN KEY (nationality, sinum) REFERENCES Person (nationality, sinum)
+);
+
 INSERT INTO Country VALUES ('Canada');
 
 INSERT INTO Place VALUES ('UBC Nest', 6133, 'University Blvd', 'V6T 1Z1', 'Canada');
@@ -48,6 +76,74 @@ INSERT INTO Place VALUES ('Calgary International Airport', 2000, 'Airport Rd NE'
 
 INSERT INTO Route VALUES (5);
 
-INSERT INTO Includes VALUES (6133, 'University Blvd', 'V6T 1Z1', 'Canada', 5, TO_TIMESTAMP('2020-09-21 17:00:00', 'YYYY/MM/DD HH24:MI:SS'));
+INSERT INTO Route VALUES (11);
 
-INSERT INTO Includes VALUES (701, 'W Georgia St', 'V7Y 1G5', 'Canada', 5, TO_TIMESTAMP('2020-09-21 18:30:00', 'YYYY/MM/DD HH24:MI:SS'));
+INSERT INTO Route VALUES (23);
+
+INSERT INTO Route VALUES (31);
+
+INSERT INTO Route VALUES (47);
+
+INSERT INTO Includes
+VALUES (6133, 'University Blvd', 'V6T 1Z1', 'Canada', 5, TO_TIMESTAMP('2020-09-21 17:00:00', 'YYYY/MM/DD HH24:MI:SS'));
+
+INSERT INTO Includes
+VALUES (701, 'W Georgia St', 'V7Y 1G5', 'Canada', 5, TO_TIMESTAMP('2020-09-21 18:30:00', 'YYYY/MM/DD HH24:MI:SS'));
+
+INSERT INTO Person Values ('Canadian', 11111111, 'John Smith');
+
+INSERT INTO Person Values ('American', 11111111, 'Daniel Jones');
+
+INSERT INTO Person Values ('Portuguese', 22222222, 'Christiano Ronaldo');
+
+INSERT INTO Person Values ('American', 33333333, 'Jay Park');
+
+INSERT INTO Person Values ('Argentinian', 44444444, 'Lionel Messi');
+
+INSERT INTO Person Values ('Chinese', 55555555, 'Alex Smith');
+
+INSERT INTO Person Values ('Italian', 66666666, 'Charlies Martin');
+
+INSERT INTO Person Values ('French', 77777777, 'Ian Chinook');
+
+INSERT INTO Timeframe Values (TO_TIMESTAMP('2020-05-15 00:00:00', 'YYYY/MM/DD HH24:MI:SS'),
+TO_TIMESTAMP('2020-05-16 00:00:00', 'YYYY/MM/DD HH24:MI:SS'));
+
+INSERT INTO Timeframe Values (TO_TIMESTAMP('2020-05-17 10:00:00', 'YYYY/MM/DD HH24:MI:SS'),
+TO_TIMESTAMP('2020-05-18 16:00:00', 'YYYY/MM/DD HH24:MI:SS'));
+
+INSERT INTO Timeframe Values (TO_TIMESTAMP('2020-05-13 00:00:00', 'YYYY/MM/DD HH24:MI:SS'),
+TO_TIMESTAMP('2020-05-13 00:00:00', 'YYYY/MM/DD HH24:MI:SS'));
+
+INSERT INTO Timeframe Values (TO_TIMESTAMP('2020-05-18 12:00:00', 'YYYY/MM/DD HH24:MI:SS'),
+TO_TIMESTAMP('2020-05-19 23:00:00', 'YYYY/MM/DD HH24:MI:SS'));
+
+INSERT INTO Timeframe Values (TO_TIMESTAMP('2020-05-18 06:00:00', 'YYYY/MM/DD HH24:MI:SS'),
+TO_TIMESTAMP('2020-05-18 14:00:00', 'YYYY/MM/DD HH24:MI:SS'));
+
+INSERT
+INTO RoutePerson_WentAt
+Values (TO_TIMESTAMP('2020-05-15 00:00:00', 'YYYY/MM/DD HH24:MI:SS'),
+TO_TIMESTAMP('2020-05-16 00:00:00', 'YYYY/MM/DD HH24:MI:SS'), 5, 'Canadian', 11111111);
+
+INSERT
+INTO RoutePerson_WentAt
+Values (TO_TIMESTAMP('2020-05-17 10:00:00', 'YYYY/MM/DD HH24:MI:SS'),
+TO_TIMESTAMP('2020-05-18 16:00:00', 'YYYY/MM/DD HH24:MI:SS'), 11, 'American', 11111111);
+
+INSERT
+INTO RoutePerson_WentAt
+Values (TO_TIMESTAMP('2020-05-13 00:00:00', 'YYYY/MM/DD HH24:MI:SS'),
+TO_TIMESTAMP('2020-05-13 00:00:00', 'YYYY/MM/DD HH24:MI:SS'), 23, 'Portuguese', 22222222);
+
+INSERT
+INTO RoutePerson_WentAt
+Values (TO_TIMESTAMP('2020-05-18 12:00:00', 'YYYY/MM/DD HH24:MI:SS'),
+TO_TIMESTAMP('2020-05-19 23:00:00', 'YYYY/MM/DD HH24:MI:SS'), 31, 'American', 33333333);
+
+INSERT
+INTO RoutePerson_WentAt
+Values (TO_TIMESTAMP('2020-05-18 06:00:00', 'YYYY/MM/DD HH24:MI:SS'),
+TO_TIMESTAMP('2020-05-18 14:00:00', 'YYYY/MM/DD HH24:MI:SS'), 47, 'Argentinian', 44444444);
+
+
