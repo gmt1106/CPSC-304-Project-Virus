@@ -19,11 +19,13 @@ public class SearchOutput extends JFrame{
         outputTable.setBounds(60, 40, 1200, 400);
 
         //add the table to the frame
-        this.add(new JScrollPane(outputTable));
-        this.setTitle("Result Table");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.pack();
-        this.setVisible(true);
+        add(new JScrollPane(outputTable));
+
+        //set this SearchOutputDialog
+        setTitle("Result Table");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        pack();
+        setVisible(true);
 
     }
 }

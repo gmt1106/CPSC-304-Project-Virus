@@ -1,8 +1,8 @@
 DROP TABLE Includes;
 DROP TABLE Place;
 DROP TABLE Country;
-DROP TABLE Route;
 DROP TABLE RoutePerson_WentAt;
+DROP TABLE Route;
 DROP TABLE Person;
 DROP TABLE Timeframe;
 
@@ -38,7 +38,7 @@ CREATE TABLE Includes (
 );
 
 CREATE TABLE Person (
-	nationality CHAR(10),
+	nationality CHAR(20),
 	sinum INTEGER,
 	name CHAR(20),
 	PRIMARY KEY (nationality, sinum)
@@ -54,7 +54,7 @@ CREATE TABLE RoutePerson_WentAt(
 	startTime TIMESTAMP NOT NULL,
 	endTime TIMESTAMP NOT NULL,
 	routeID INTEGER,
-	nationality CHAR(10),
+	nationality CHAR(20),
 	sinum INTEGER,
 	PRIMARY KEY (routeID, nationality, sinum),
 	FOREIGN KEY (startTime, endTime) REFERENCES Timeframe (startTime, endTime),

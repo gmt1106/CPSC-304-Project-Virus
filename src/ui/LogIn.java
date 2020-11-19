@@ -30,16 +30,13 @@ public class LogIn extends JFrame {
                         DatabaseDialog databaseDialog = new DatabaseDialog(virusDatabase);
                         databaseDialog.add(databaseDialog.databaseDialog);
 
-                        databaseDialog.setVisible(true);
-                        databaseDialog.setTitle("Virus Database");
-                        databaseDialog.setDefaultCloseOperation(databaseDialog.EXIT_ON_CLOSE);
-                        databaseDialog.setSize(900, 900);
-                        databaseDialog.setVisible(true);
                     } else {
                         JOptionPane.showMessageDialog(null,"Database setup is failed.");
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, e + "\n\nConnection failed.");
+                    JOptionPane.showMessageDialog(null, "Connection failed." + "\n\nPlease check your login ID and Password." +
+                            "\nThe format should be     ID: ora_<CWL>     Password:a<studentNumber>" + "\n\nAlso ensure that you have created an ssh tunnel" +
+                            "\nssh -l <CWL> -L localhost:1522:dbhost.students.cs.ubc.ca:1522 remote.students.cs.ubc.ca");
                 }
             }
         });
@@ -51,6 +48,7 @@ public class LogIn extends JFrame {
         LogIn logIn = new LogIn();
         logIn.add(logIn.logIn);
 
+        //set this LogIn Dialog
         logIn.setTitle("Log In");
         logIn.setDefaultCloseOperation(logIn.EXIT_ON_CLOSE);
         logIn.setSize(300, 300);
