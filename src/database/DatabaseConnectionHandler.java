@@ -2,6 +2,7 @@ package database;
 
 
 import model.Country;
+import model.Person;
 import model.Place;
 import model.Route;
 import oracle.jdbc.driver.SQLUtil;
@@ -183,4 +184,28 @@ public class DatabaseConnectionHandler {
 
         return result.toArray(new Country[result.size()]);
     }
+
+    public Person[] getPersonInfo() {
+
+        ArrayList<Person> result = new ArrayList<Person>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Person");
+
+            while(rs.next()) {
+                Person person = new Person(rs.getString("nationality"),
+                        rs.getInt("sinum"), rs.getString("name"));
+                result.add(person);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new Person[result.size()]);
+    }
+
 }
