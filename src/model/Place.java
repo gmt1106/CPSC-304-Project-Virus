@@ -38,14 +38,14 @@ public class Place implements Model {
 
 
 /*
-    CREATE TABLE Place (
-        name CHAR(20),
+CREATE TABLE Place (
+    name CHAR(20),
     houseNum INTEGER,
     streetName CHAR(20),
     postalCode CHAR(10),
     cname CHAR(20),
     PRIMARY KEY (houseNum, streetName, postalCode, cname)
     FOREIGN KEY (cname) REFERENCES Country (name),
-        ON DELETE CASCADE
-        );
+    ON DELETE CASCADE
+    );
  */
