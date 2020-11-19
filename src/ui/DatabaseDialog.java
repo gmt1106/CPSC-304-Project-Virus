@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.text.DateFormatter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 public class DatabaseDialog extends JFrame {
     private static VirusDatabase virusDatabase = null;
@@ -139,6 +140,8 @@ public class DatabaseDialog extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                Date upperBoundDate = (Date)lowerboundDateSpinnerForSearchPlace.getModel().getValue();
+                Date lowerBoundDate = (Date)upperboundDateSpinnerForSearchPlace.getModel().getValue();
 
             }
         });
