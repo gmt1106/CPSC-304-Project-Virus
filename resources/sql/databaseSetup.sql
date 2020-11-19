@@ -2,10 +2,9 @@ DROP TABLE Includes;
 DROP TABLE Place;
 DROP TABLE Country;
 DROP TABLE RoutePerson_WentAt;
-DROP TABLE Route;
 DROP TABLE Person;
 DROP TABLE Timeframe;
-
+DROP TABLE Route;
 
 CREATE TABLE Country (
     name char(10) PRIMARY KEY
