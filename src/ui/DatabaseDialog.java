@@ -140,9 +140,22 @@ public class DatabaseDialog extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                Date upperBoundDate = (Date)lowerboundDateSpinnerForSearchPlace.getModel().getValue();
-                Date lowerBoundDate = (Date)upperboundDateSpinnerForSearchPlace.getModel().getValue();
+                Date lowerBoundDate = (Date)lowerboundDateSpinnerForSearchPlace.getModel().getValue();
+                Date upperBoundDate = (Date)upperboundDateSpinnerForSearchPlace.getModel().getValue();
 
+                System.out.println(upperBoundDate.toString());
+
+                Place[] result = virusDatabase.getPlacesInfectedVisited(lowerBoundDate, upperBoundDate);
+
+                if (result.length != 0) {
+                    String[][] data = new String[result.length][];
+                    for (int i = 0; i < result.length; i++) {
+                        data[i] = result[i].tupleToListOfString();
+                    }
+                    String[] columnNames = result[0].columnNameListOfString();
+
+                    createSearchOutputDialog(data, columnNames);
+                }
             }
         });
     }
