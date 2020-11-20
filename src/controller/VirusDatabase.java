@@ -7,6 +7,7 @@ import model.Place;
 import model.Route;
 import org.apache.ibatis.session.SqlSessionException;
 
+import java.sql.Date;
 import java.sql.SQLException;
 
 public class VirusDatabase {
@@ -55,6 +56,12 @@ public class VirusDatabase {
     public Person[] getPersonInfo() {
 
         return dbHandler.getPersonInfo();
+
+    }
+
+    public Person[] searchPersonInfo(String nationality, int routeNum, Date startingAt, Date endingAt) {
+
+        return dbHandler.searchPersonInfo(nationality, routeNum, startingAt, endingAt);
 
     }
 }
