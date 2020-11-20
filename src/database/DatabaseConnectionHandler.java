@@ -12,8 +12,17 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.Reader;
 import java.io.IOException;
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -180,6 +189,7 @@ public class DatabaseConnectionHandler {
         return result.toArray(new Country[result.size()]);
     }
 
+
     public Person[] getPersonInfo() {
 
         ArrayList<Person> result = new ArrayList<Person>();
@@ -201,6 +211,44 @@ public class DatabaseConnectionHandler {
         }
 
         return result.toArray(new Person[result.size()]);
+    }
+
+    public Place[] getPlacesInfectedVisited (Date lowerBoundDate, Date upperBoundDate) {
+
+        //TODO: need to change the date type to somethign compareable in sql and add the where cluase
+        //TODO: Might have to change the layout type in the gui
+
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String lowerBoundDateString = formatter.format(lowerBoundDate);
+        String upperBoundDateString = formatter.format(upperBoundDate);
+        System.out.println(lowerBoundDateString);
+
+        ArrayList<Place> result = new ArrayList<Place>();
+
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT Pl.name, Pl.houseNum, Pl.streetName, Pl.postalCode, Pl.cname FROM Place Pl, Includes I,  RoutePerson_WentAt W,  InfectedLivesIn L WHERE I.houseNum = Pl.houseNum AND I.streetName = Pl.streetName AND I.postalCode = Pl.postalCode AND I.routeID = W.routeID AND W.nationality = L.nationality AND W.sinum = L.sinum AND I.time > TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS') AND I.time < TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS')");
+
+            ps.setString(1, lowerBoundDateString);
+            ps.setString(2, upperBoundDateString);
+
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+                Place place = new Place(rs.getString("name"),
+                        rs.getInt("houseNum"),
+                        rs.getString("streetName"),
+                        rs.getString("postalCode"),
+                        rs.getString("cname"));
+                result.add(place);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new Place[result.size()]);
     }
 
     public Person[] searchPersonInfo (String nationality, int routeNum, Date startingAt, Date endingAt) {
