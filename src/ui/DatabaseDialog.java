@@ -48,6 +48,7 @@ public class DatabaseDialog extends JFrame {
     private JTextField startedAfterField_Person;
     private JButton searchVirus;
     private JSpinner startedAfterField_Virus;
+    private JButton SearchNotinfectedPeopleWhoWentToDangerousRouteButton;
 
     public DatabaseDialog(VirusDatabase virusDatabase)  {
 
@@ -243,6 +244,13 @@ public class DatabaseDialog extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 java.sql.Date startedAfter = java.sql.Date.valueOf(startedAfterField_Person.getText());
+            }
+        });
+        
+        SearchNotinfectedPeopleWhoWentToDangerousRouteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
             }
         });
     }
