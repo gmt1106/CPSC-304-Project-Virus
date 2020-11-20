@@ -1,10 +1,12 @@
 DROP TABLE Includes;
 DROP TABLE Place;
+DROP TABLE InfectedLivesIn;
 DROP TABLE Country;
 DROP TABLE RoutePerson_WentAt;
 DROP TABLE Person;
 DROP TABLE Timeframe;
 DROP TABLE Route;
+
 
 CREATE TABLE Country (
     name char(10) PRIMARY KEY
@@ -61,6 +63,16 @@ CREATE TABLE RoutePerson_WentAt(
 	FOREIGN KEY (nationality, sinum) REFERENCES Person (nationality, sinum)
 );
 
+CREATE TABLE InfectedLivesIn (
+    nationality char(10),
+    sinum int,
+    cname char(10) NOT NULL,
+    PRIMARY KEY (nationality, sinum),
+    FOREIGN KEY (cname) REFERENCES Country (name) ON DELETE CASCADE
+);
+
+
+
 INSERT INTO Country VALUES ('Canada');
 
 INSERT INTO Place VALUES ('UBC Nest', 6133, 'University Blvd', 'V6T 1Z1', 'Canada');
@@ -88,6 +100,19 @@ VALUES (6133, 'University Blvd', 'V6T 1Z1', 'Canada', 5, TO_TIMESTAMP('2020-09-2
 
 INSERT INTO Includes
 VALUES (701, 'W Georgia St', 'V7Y 1G5', 'Canada', 5, TO_TIMESTAMP('2020-09-21 18:30:00', 'YYYY/MM/DD HH24:MI:SS'));
+
+INSERT INTO Includes
+Values (290, 'Bremner Blvd', 'M5V 3L9', 'Canada', 11, TO_TIMESTAMP('2020-10-21 18:52:21','YYYY/MM/DD HH24:MI:SS') );
+
+INSERT INTO Includes
+Values (2000, 'Airport Rd NE', 'T2E 6W5', 'Canada', 23, TO_TIMESTAMP('2020-05-17 02:54:00', 'YYYY/MM/DD HH24:MI:SS'));
+
+INSERT INTO Includes
+Values (845, 'Avison Way', 'V6G 3E2', 'Canada', 31, TO_TIMESTAMP('2020-07-15 05:11:00', 'YYYY/MM/DD HH24:MI:SS'));
+
+INSERT INTO Includes
+Values (2000, 'Airport Rd NE', 'T2E 6W5', 'Canada', 47, TO_TIMESTAMP('2020-05-17 19:54:30', 'YYYY/MM/DD HH24:MI:SS'));
+
 
 INSERT INTO Person Values ('Canadian', 11111111, 'John Smith');
 
@@ -145,4 +170,12 @@ INTO RoutePerson_WentAt
 Values (TO_TIMESTAMP('2020-05-18 06:00:00', 'YYYY/MM/DD HH24:MI:SS'),
 TO_TIMESTAMP('2020-05-18 14:00:00', 'YYYY/MM/DD HH24:MI:SS'), 47, 'Argentinian', 44444444);
 
+INSERT INTO InfectedLivesIn VALUES ('Canadian', 11111111, 'Canada');
 
+INSERT INTO InfectedLivesIn VALUES ('American', 11111111, 'Canada');
+
+INSERT INTO InfectedLivesIn VALUES ('Italian', 66666666, 'Canada');
+
+INSERT INTO InfectedLivesIn VALUES ('French', 77777777, 'Canada');
+
+INSERT INTO InfectedLivesIn VALUES ('English', 88888888, 'Canada');

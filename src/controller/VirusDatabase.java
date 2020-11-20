@@ -8,6 +8,7 @@ import model.Route;
 import org.apache.ibatis.session.SqlSessionException;
 
 import java.sql.SQLException;
+import java.util.Date;
 
 public class VirusDatabase {
     private DatabaseConnectionHandler dbHandler = null;
@@ -55,6 +56,12 @@ public class VirusDatabase {
     public Person[] getPersonInfo() {
 
         return dbHandler.getPersonInfo();
+
+    }
+
+    public Place[] getPlacesInfectedVisited(Date lowerBoundDate, Date upperBoundDate) {
+
+        return dbHandler.getPlacesInfectedVisited(lowerBoundDate, upperBoundDate);
 
     }
 }
