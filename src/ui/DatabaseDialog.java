@@ -2,6 +2,7 @@ package ui;
 
 import controller.VirusDatabase;
 import model.Country;
+import model.Person;
 import model.Place;
 import model.Route;
 
@@ -39,13 +40,14 @@ public class DatabaseDialog extends JFrame {
     private JButton showPersonTable;
     private JTextField nationalityField_Person;
     private JTextField visitedRouteField_Person;
-    private JTextField startingAtField_Person;
-    private JTextField endingAtField_Person;
+    private JSpinner startingAtField_Person;
+    private JSpinner endingAtField_Person;
     private JButton searchPerson;
     private JTextField sinumField_Person;
     private JButton updateRouteButton;
     private JTextField startedAfterField_Person;
     private JButton searchVirus;
+    private JSpinner startedAfterField_Virus;
 
     public DatabaseDialog(VirusDatabase virusDatabase)  {
 
@@ -68,6 +70,28 @@ public class DatabaseDialog extends JFrame {
         formatter2.setAllowsInvalid(false);
         formatter2.setOverwriteMode(true);
         upperboundDateSpinnerForSearchPlace.setEditor(editor2);
+
+        SpinnerDateModel model3 = new SpinnerDateModel();
+        SpinnerDateModel model4 = new SpinnerDateModel();
+        SpinnerDateModel model5 = new SpinnerDateModel();
+        startingAtField_Person.setModel(model3);
+        endingAtField_Person.setModel(model4);
+        startedAfterField_Virus.setModel(model5);
+        JSpinner.DateEditor editor3 = new JSpinner.DateEditor(startingAtField_Person, "MM/dd/yyyy");
+        JSpinner.DateEditor editor4 = new JSpinner.DateEditor(endingAtField_Person, "MM/dd/yyyy");
+        JSpinner.DateEditor editor5 = new JSpinner.DateEditor(startedAfterField_Virus, "MM/dd/yyyy");
+        DateFormatter formatter3 = (DateFormatter)editor2.getTextField().getFormatter();
+        DateFormatter formatter4 = (DateFormatter)editor2.getTextField().getFormatter();
+        DateFormatter formatter5 = (DateFormatter)editor2.getTextField().getFormatter();
+        formatter3.setAllowsInvalid(false);
+        formatter3.setOverwriteMode(true);
+        formatter4.setAllowsInvalid(false);
+        formatter4.setOverwriteMode(true);
+        formatter5.setAllowsInvalid(false);
+        formatter5.setOverwriteMode(true);
+        startingAtField_Person.setEditor(editor3);
+        endingAtField_Person.setEditor(editor4);
+        startedAfterField_Virus.setEditor(editor5);
 
         //set up this Database Dialog
         setTitle("Virus Database");
@@ -156,6 +180,69 @@ public class DatabaseDialog extends JFrame {
 
                     createSearchOutputDialog(data, columnNames);
                 }
+            }
+        });
+
+        showPersonTable.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                Person[] result = virusDatabase.getPersonInfo();
+                if (result.length != 0) {
+                    String[][] data = new String[result.length][];
+                    for (int i = 0; i < result.length; i++) {
+                        data[i] = result[i].tupleToListOfString();
+                    }
+                    String[] columnNames = result[0].columnNameListOfString();
+
+                    createSearchOutputDialog(data, columnNames);
+                }
+            }
+        });
+
+        searchPerson.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String nationality = nationalityField_Person.getText();
+                int routeNum = Integer.parseInt(visitedRouteField_Person.getText());
+                Date startingAtJavaDate = (Date)startingAtField_Person.getModel().getValue();
+                Date endingAtJavaDate = (Date)endingAtField_Person.getModel().getValue();
+
+                java.sql.Date startingAt = new java.sql.Date(startingAtJavaDate.getTime());
+                java.sql.Date endingAt = new java.sql.Date(endingAtJavaDate.getTime());
+
+                Person[] result = virusDatabase.searchPersonInfo(nationality, routeNum, startingAt, endingAt);
+                if (result.length != 0) {
+                    String[][] data = new String[result.length][];
+                    for (int i = 0; i < result.length; i++) {
+                        data[i] = result[i].tupleToListOfString();
+                    }
+                    String[] columnNames = result[0].columnNameListOfString();
+
+                    createSearchOutputDialog(data, columnNames);
+                }
+
+            }
+        });
+
+        updateRouteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+//                String nationality = nationalityField_Person.getText();
+//                int visitedRoute = Integer.parseInt(visitedRouteField_Person.getText());
+//                java.sql.Date startingAt = java.sql.Date.valueOf(startingAtField_Person.getText());
+//                java.sql.Date endingAt = java.sql.Date.valueOf(endingAtField_Person.getText());
+//                int sinum = Integer.parseInt(sinumField_Person.getText());
+
+            }
+        });
+
+        searchVirus.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                java.sql.Date startedAfter = java.sql.Date.valueOf(startedAfterField_Person.getText());
             }
         });
     }

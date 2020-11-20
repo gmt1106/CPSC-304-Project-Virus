@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.Reader;
 import java.io.IOException;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -188,6 +189,7 @@ public class DatabaseConnectionHandler {
         return result.toArray(new Country[result.size()]);
     }
 
+
     public Person[] getPersonInfo() {
 
         ArrayList<Person> result = new ArrayList<Person>();
@@ -248,5 +250,35 @@ public class DatabaseConnectionHandler {
 
         return result.toArray(new Place[result.size()]);
     }
+
+    public Person[] searchPersonInfo (String nationality, int routeNum, Date startingAt, Date endingAt) {
+        ArrayList<Person> result = new ArrayList<Person>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Person P, RoutePerson_WentAt RW " +
+                    "WHERE P.nationality = RW.nationality AND P.sinum = RW.sinum AND RW.routeID = 5 AND RW.startTime >= '2020-05-01' AND RW.endTime <= '2020-05-20'");
+
+            while(rs.next()) {
+                Person person = new Person(rs.getString("nationality"),
+                        rs.getInt("sinum"), rs.getString("name"));
+                result.add(person);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new Person[result.size()]);
+    }
+
+    public void updateRoute (String nationality, int routeNum, Date startingAt, Date endingAt) {
+    }
+
+//    public Virus[] searchVirus (Date startedAfter) {
+//        return ;
+//    }
 
 }
