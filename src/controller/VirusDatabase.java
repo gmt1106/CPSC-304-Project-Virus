@@ -71,4 +71,9 @@ public class VirusDatabase {
         return dbHandler.getPlacesInfectedVisited(lowerBoundDate, upperBoundDate);
 
     }
+
+    public void updateRoute(String nationality, int routeNum, int sinum, Date startingAt, Date endingAt) {
+
+        dbHandler.updateRoute(nationality, routeNum, sinum, startingAt, endingAt);
+    }
 }

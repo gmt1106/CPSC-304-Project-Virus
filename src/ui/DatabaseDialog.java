@@ -206,11 +206,8 @@ public class DatabaseDialog extends JFrame {
 
                 String nationality = nationalityField_Person.getText();
                 int routeNum = Integer.parseInt(visitedRouteField_Person.getText());
-                Date startingAtJavaDate = (Date)startingAtField_Person.getModel().getValue();
-                Date endingAtJavaDate = (Date)endingAtField_Person.getModel().getValue();
-
-                java.sql.Date startingAt = new java.sql.Date(startingAtJavaDate.getTime());
-                java.sql.Date endingAt = new java.sql.Date(endingAtJavaDate.getTime());
+                Date startingAt = (Date)startingAtField_Person.getModel().getValue();
+                Date endingAt = (Date)endingAtField_Person.getModel().getValue();
 
                 Person[] result = virusDatabase.searchPersonInfo(nationality, routeNum, startingAt, endingAt);
                 if (result.length != 0) {

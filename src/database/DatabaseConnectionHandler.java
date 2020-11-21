@@ -252,13 +252,27 @@ public class DatabaseConnectionHandler {
     }
 
     public Person[] searchPersonInfo (String nationality, int routeNum, Date startingAt, Date endingAt) {
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String startingAtDateString = formatter.format(startingAt);
+        String endingAtDateString = formatter.format(endingAt);
         ArrayList<Person> result = new ArrayList<Person>();
 
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM Person P, RoutePerson_WentAt RW " +
-                    "WHERE P.nationality = RW.nationality AND P.sinum = RW.sinum AND RW.routeID = 5 AND RW.startTime >= '2020-05-01' AND RW.endTime <= '2020-05-20'");
+        System.out.println(nationality);
+        System.out.println(routeNum);
+        System.out.println(startingAtDateString);
+        System.out.println(endingAtDateString);
 
+
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT P.nationality, P.sinum, P.name FROM Person P, RoutePerson_WentAt RW WHERE P.nationality = RW.nationality AND P.sinum = RW.sinum AND P.nationality = 'Canadian' AND RW.routeID = ? AND RW.startTime >= TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS') AND RW.endTime <= TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS')");
+
+//            ps.setString(1, nationality);
+            ps.setInt(1, routeNum);
+            ps.setString(2, startingAtDateString);
+            ps.setString(3, endingAtDateString);
+
+
+            ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 Person person = new Person(rs.getString("nationality"),
                         rs.getInt("sinum"), rs.getString("name"));
@@ -266,7 +280,7 @@ public class DatabaseConnectionHandler {
             }
 
             rs.close();
-            stmt.close();
+            ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
@@ -274,7 +288,40 @@ public class DatabaseConnectionHandler {
         return result.toArray(new Person[result.size()]);
     }
 
-    public void updateRoute (String nationality, int routeNum, Date startingAt, Date endingAt) {
+    public void updateRoute (String nationality, int routeNum, int sinum, Date startingAt, Date endingAt) {
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String startingAtDateString = formatter.format(startingAt);
+        String endingAtDateString = formatter.format(endingAt);
+
+        try {
+            PreparedStatement ps1 = connection.prepareStatement("INSERT INTO Place VALUES (TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS'), TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS'))");
+
+            ps1.setString(1, startingAtDateString);
+            ps1.setString(2, endingAtDateString);
+
+            ps1.executeUpdate();
+            connection.commit();
+
+            ps1.close();
+
+            PreparedStatement ps2 = connection.prepareStatement("UPDATE RoutePerson_WentAt " +
+                    "SET startTime =  TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS'), endTime = TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS') " +
+                    "WHERE routeID = ? AND nationality = ? AND sinum = ?");
+
+            ps2.setString(1, startingAtDateString);
+            ps2.setString(2, endingAtDateString);
+            ps2.setInt(3, routeNum);
+            ps2.setString(4, nationality);
+            ps2.setInt(5, sinum);
+
+            ps2.executeUpdate();
+            connection.commit();
+
+            ps2.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
     }
 
 //    public Virus[] searchVirus (Date startedAfter) {
