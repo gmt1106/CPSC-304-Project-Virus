@@ -1,10 +1,7 @@
 package ui;
 
 import controller.VirusDatabase;
-import model.Country;
-import model.Person;
-import model.Place;
-import model.Route;
+import model.*;
 
 import javax.swing.*;
 import javax.swing.text.DateFormatter;
@@ -251,6 +248,16 @@ public class DatabaseDialog extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                Person[] result = virusDatabase.searchNotInfectedButMightInfected();
+                if (result.length != 0) {
+                    String[][] data = new String[result.length][];
+                    for (int i = 0; i < result.length; i++) {
+                        data[i] = result[i].tupleToListOfString();
+                    }
+                    String[] columnNames = result[0].columnNameListOfString();
+
+                    createSearchOutputDialog(data, columnNames);
+                }
             }
         });
     }

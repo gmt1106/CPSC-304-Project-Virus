@@ -1,10 +1,7 @@
 package database;
 
 
-import model.Country;
-import model.Person;
-import model.Place;
-import model.Route;
+import model.*;
 import oracle.jdbc.driver.SQLUtil;
 
 import java.io.File;
@@ -215,9 +212,6 @@ public class DatabaseConnectionHandler {
 
     public Place[] getPlacesInfectedVisited (Date lowerBoundDate, Date upperBoundDate) {
 
-        //TODO: need to change the date type to somethign compareable in sql and add the where cluase
-        //TODO: Might have to change the layout type in the gui
-
         Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String lowerBoundDateString = formatter.format(lowerBoundDate);
         String upperBoundDateString = formatter.format(upperBoundDate);
@@ -276,6 +270,31 @@ public class DatabaseConnectionHandler {
 
     public void updateRoute (String nationality, int routeNum, Date startingAt, Date endingAt) {
     }
+
+    public Person[] searchNotInfectedButMightInfected () {
+
+        ArrayList<Person> result = new ArrayList<Person>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT P.nationality, P.sinum, P.name FROM NotInfected N, Person P WHERE N.nationality = P.nationality AND N.sinum = P.sinum AND NOT EXISTS ((SELECT W.routeID FROM InfectedLivesIn I, RoutePerson_WentAt W WHERE I.sinum = W.sinum AND I.nationality = W.nationality) MINUS (SELECT W2.routeID FROM RoutePerson_WentAt W2 WHERE N.sinum = W2.sinum AND N.nationality = W2.nationality))");
+
+            while(rs.next()) {
+                Person person = new Person(rs.getString("nationality"),
+                        rs.getInt("sinum"),
+                        rs.getString("name"));
+                result.add(person);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new Person[result.size()]);
+    }
+
 
 //    public Virus[] searchVirus (Date startedAfter) {
 //        return ;

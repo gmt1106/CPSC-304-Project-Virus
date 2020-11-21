@@ -1,6 +1,7 @@
 DROP TABLE Includes;
 DROP TABLE Place;
 DROP TABLE InfectedLivesIn;
+DROP TABLE NotInfected;
 DROP TABLE Country;
 DROP TABLE RoutePerson_WentAt;
 DROP TABLE Person;
@@ -34,8 +35,8 @@ CREATE TABLE Includes (
 	routeID INTEGER,
 	time TIMESTAMP,
 	PRIMARY KEY (houseNum, streetName, postalCode, cname, routeID),
-	FOREIGN KEY (houseNum, streetName, postalCode, cname) REFERENCES Place (houseNum, streetName, postalCode, cname),
-	FOREIGN KEY (routeID) REFERENCES Route (routeID)
+	FOREIGN KEY (houseNum, streetName, postalCode, cname) REFERENCES Place (houseNum, streetName, postalCode, cname) ON DELETE CASCADE,
+	FOREIGN KEY (routeID) REFERENCES Route (routeID) ON DELETE CASCADE
 );
 
 CREATE TABLE Person (
@@ -58,19 +59,26 @@ CREATE TABLE RoutePerson_WentAt(
 	nationality CHAR(20),
 	sinum INTEGER,
 	PRIMARY KEY (routeID, nationality, sinum),
-	FOREIGN KEY (startTime, endTime) REFERENCES Timeframe (startTime, endTime),
+	FOREIGN KEY (startTime, endTime) REFERENCES Timeframe (startTime, endTime) ON DELETE CASCADE,
 	FOREIGN KEY (routeID) REFERENCES Route (routeID),
-	FOREIGN KEY (nationality, sinum) REFERENCES Person (nationality, sinum)
+	FOREIGN KEY (nationality, sinum) REFERENCES Person (nationality, sinum) ON DELETE CASCADE
 );
 
 CREATE TABLE InfectedLivesIn (
-    nationality char(10),
-    sinum int,
+    nationality char(20),
+    sinum INTEGER,
     cname char(10) NOT NULL,
     PRIMARY KEY (nationality, sinum),
-    FOREIGN KEY (cname) REFERENCES Country (name) ON DELETE CASCADE
+    FOREIGN KEY (cname) REFERENCES Country (name) ON DELETE CASCADE,
+    FOREIGN KEY (nationality, sinum) REFERENCES Person (nationality, sinum) ON DELETE CASCADE
 );
 
+CREATE TABLE NotInfected (
+    nationality char(20),
+    sinum INTEGER,
+    PRIMARY KEY (nationality, sinum),
+    FOREIGN KEY (nationality, sinum) REFERENCES Person (nationality, sinum) ON DELETE CASCADE
+);
 
 
 INSERT INTO Country VALUES ('Canada');
@@ -130,6 +138,11 @@ INSERT INTO Person Values ('Italian', 66666666, 'Charlies Martin');
 
 INSERT INTO Person Values ('French', 77777777, 'Ian Chinook');
 
+INSERT INTO Person Values ('English', 88888888, 'James Solibon');
+
+INSERT INTO Person Values ('Mexican', 99999999, 'Megan Hell');
+
+
 INSERT INTO Timeframe Values (TO_TIMESTAMP('2020-05-15 00:00:00', 'YYYY/MM/DD HH24:MI:SS'),
 TO_TIMESTAMP('2020-05-16 00:00:00', 'YYYY/MM/DD HH24:MI:SS'));
 
@@ -144,6 +157,9 @@ TO_TIMESTAMP('2020-05-19 23:00:00', 'YYYY/MM/DD HH24:MI:SS'));
 
 INSERT INTO Timeframe Values (TO_TIMESTAMP('2020-05-18 06:00:00', 'YYYY/MM/DD HH24:MI:SS'),
 TO_TIMESTAMP('2020-05-18 14:00:00', 'YYYY/MM/DD HH24:MI:SS'));
+
+INSERT INTO Timeframe Values (TO_TIMESTAMP('2020-05-18 15:00:00', 'YYYY/MM/DD HH24:MI:SS'),
+TO_TIMESTAMP('2020-05-18 17:00:00', 'YYYY/MM/DD HH24:MI:SS'));
 
 INSERT
 INTO RoutePerson_WentAt
@@ -170,6 +186,16 @@ INTO RoutePerson_WentAt
 Values (TO_TIMESTAMP('2020-05-18 06:00:00', 'YYYY/MM/DD HH24:MI:SS'),
 TO_TIMESTAMP('2020-05-18 14:00:00', 'YYYY/MM/DD HH24:MI:SS'), 47, 'Argentinian', 44444444);
 
+INSERT
+INTO RoutePerson_WentAt
+Values (TO_TIMESTAMP('2020-05-18 15:00:00', 'YYYY/MM/DD HH24:MI:SS'),
+TO_TIMESTAMP('2020-05-18 17:00:00', 'YYYY/MM/DD HH24:MI:SS'), 5, 'Argentinian', 44444444);
+
+INSERT
+INTO RoutePerson_WentAt
+Values (TO_TIMESTAMP('2020-05-17 10:00:00', 'YYYY/MM/DD HH24:MI:SS'),
+TO_TIMESTAMP('2020-05-18 16:00:00', 'YYYY/MM/DD HH24:MI:SS'), 11, 'Argentinian', 44444444);
+
 INSERT INTO InfectedLivesIn VALUES ('Canadian', 11111111, 'Canada');
 
 INSERT INTO InfectedLivesIn VALUES ('American', 11111111, 'Canada');
@@ -179,3 +205,16 @@ INSERT INTO InfectedLivesIn VALUES ('Italian', 66666666, 'Canada');
 INSERT INTO InfectedLivesIn VALUES ('French', 77777777, 'Canada');
 
 INSERT INTO InfectedLivesIn VALUES ('English', 88888888, 'Canada');
+
+INSERT INTO NotInfected VALUES ('Portuguese', 22222222);
+
+INSERT INTO NotInfected VALUES ('American', 33333333);
+
+INSERT INTO NotInfected VALUES ('Argentinian', 44444444);
+
+INSERT INTO NotInfected VALUES ('Chinese', 55555555);
+
+INSERT INTO NotInfected VALUES ('Mexican', 99999999);
+
+
+
