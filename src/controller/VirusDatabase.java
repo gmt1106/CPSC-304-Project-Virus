@@ -1,10 +1,7 @@
 package controller;
 
 import database.DatabaseConnectionHandler;
-import model.Country;
-import model.Person;
-import model.Place;
-import model.Route;
+import model.*;
 import org.apache.ibatis.session.SqlSessionException;
 
 //import java.sql.Date;
@@ -69,6 +66,12 @@ public class VirusDatabase {
     public Place[] getPlacesInfectedVisited(Date lowerBoundDate, Date upperBoundDate) {
 
         return dbHandler.getPlacesInfectedVisited(lowerBoundDate, upperBoundDate);
+
+    }
+
+    public Person[] searchNotInfectedButMightInfected() {
+
+        return dbHandler.searchNotInfectedButMightInfected();
 
     }
 }
