@@ -94,4 +94,10 @@ public class VirusDatabase {
         return dbHandler.searchVirus(startedAfter);
 
     }
+
+    public Kills[] getCuresKillingVirus() {
+
+        return dbHandler.getCuresKillingVirus();
+
+    }
 }

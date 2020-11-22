@@ -410,4 +410,26 @@ public class DatabaseConnectionHandler {
         return result.toArray(new MedicineKills[result.size()]);
     }
 
+    public Kills[] getCuresKillingVirus() {
+
+        ArrayList<Kills> result = new ArrayList<Kills>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Kills");
+
+            while(rs.next()) {
+                Kills kills = new Kills(rs.getInt("medicineID"), rs.getInt("virusID"));
+                result.add(kills);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new Kills[result.size()]);
+    }
+
 }
