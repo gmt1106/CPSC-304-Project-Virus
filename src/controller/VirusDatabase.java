@@ -1,11 +1,13 @@
 package controller;
 
 import database.DatabaseConnectionHandler;
+import javafx.util.Pair;
 import model.*;
 import org.apache.ibatis.session.SqlSessionException;
 
 //import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class VirusDatabase {
@@ -84,6 +86,12 @@ public class VirusDatabase {
     public RoutePerson_WentAt[] getRoutePeopleInfo() {
 
         return dbHandler.getRoutePeopleInfo();
+
+    }
+
+    public MedicineKills[] searchVirus(Date startedAfter) {
+
+        return dbHandler.searchVirus(startedAfter);
 
     }
 }

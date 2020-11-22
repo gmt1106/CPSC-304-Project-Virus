@@ -1,6 +1,7 @@
 package database;
 
 
+import javafx.util.Pair;
 import model.*;
 import oracle.jdbc.driver.SQLUtil;
 
@@ -380,8 +381,33 @@ public class DatabaseConnectionHandler {
     }
 
 
-//    public Virus[] searchVirus (Date startedAfter) {
-//        return ;
-//    }
+    public MedicineKills[] searchVirus (Date startedAfter) {
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String startedAfterDateString = formatter.format(startedAfter);
+        ArrayList<MedicineKills> result = new ArrayList<MedicineKills>();
+
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT K.MedicineID, COUNT(*) " +
+                    "FROM Kills K, Virus V WHERE K.virusID = V.virusID AND V.startDate >= TO_DATE(?, 'YYYY/MM/DD')" +
+                    "GROUP BY K.medicineID " +
+                    "HAVING 1 < (SELECT  COUNT(*) " +
+                    "FROM Kills K2 WHERE K2.medicineID = K.medicineID)");
+
+            ps.setString(1, startedAfterDateString);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+                MedicineKills medicineKills = new MedicineKills(rs.getInt(1), rs.getInt(2));
+                result.add(medicineKills);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new MedicineKills[result.size()]);
+    }
 
 }

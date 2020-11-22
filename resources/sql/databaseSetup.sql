@@ -7,6 +7,10 @@ DROP TABLE RoutePerson_WentAt;
 DROP TABLE Person;
 DROP TABLE Timeframe;
 DROP TABLE Route;
+DROP TABLE Kills;
+DROP TABLE Cure;
+DROP TABLE Virus;
+
 
 
 CREATE TABLE Country (
@@ -80,6 +84,23 @@ CREATE TABLE NotInfected (
     FOREIGN KEY (nationality, sinum) REFERENCES Person (nationality, sinum) ON DELETE CASCADE
 );
 
+CREATE TABLE Virus (
+    virusID int PRIMARY KEY,
+    name char(20),
+    startDate Date
+);
+
+CREATE TABLE Cure (
+    medicineID int PRIMARY KEY
+);
+
+CREATE TABLE Kills (
+    medicineID int,
+    virusID int,
+    PRIMARY KEY(medicineID, virusID),
+    FOREIGN KEY (medicineID) REFERENCES Cure ON DELETE cascade,
+    FOREIGN KEY (virusID) REFERENCES  Virus ON DELETE cascade
+);
 
 INSERT INTO Country VALUES ('Canada');
 
@@ -215,6 +236,44 @@ INSERT INTO NotInfected VALUES ('Argentinian', 44444444);
 INSERT INTO NotInfected VALUES ('Chinese', 55555555);
 
 INSERT INTO NotInfected VALUES ('Mexican', 99999999);
+
+INSERT INTO Virus Values (131222, 'SARS', TO_DATE('2002-09-21', 'YYYY/MM/DD'));
+
+INSERT INTO Virus Values (843218, 'COVID19', TO_DATE('2020-03-06', 'YYYY/MM/DD'));
+
+INSERT INTO Virus Values (8164182, 'HIV', TO_DATE('1959-08-01', 'YYYY/MM/DD'));
+
+INSERT INTO Virus Values (6712525, 'MERS', TO_DATE('2012-06-07', 'YYYY/MM/DD'));
+
+INSERT INTO Virus Values (981224, 'SMALLPOX', TO_DATE('1570-07-03', 'YYYY/MM/DD'));
+
+INSERT INTO Virus Values (7788453, 'CHICKENPOX', TO_DATE('1995-12-28', 'YYYY/MM/DD'));
+
+INSERT INTO Cure Values (986521065);
+
+INSERT INTO Cure Values (645132582);
+
+INSERT INTO Cure Values (461330224);
+
+INSERT INTO Cure Values (7865432123);
+
+INSERT INTO Cure Values (563153133);
+
+INSERT INTO Cure Values (8164182);
+
+INSERT INTO Kills Values (645132582, 131222);
+
+INSERT INTO Kills Values (645132582, 6712525);
+
+INSERT INTO Kills Values (461330224, 8164182);
+
+INSERT INTO Kills Values (7865432123, 6712525);
+
+INSERT INTO Kills Values (8164182, 8164182);
+
+INSERT INTO Kills Values (986521065, 131222);
+
+INSERT INTO Kills Values (986521065, 7788453);
 
 
 

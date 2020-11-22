@@ -1,17 +1,22 @@
 package model;
 
 public class Cure implements Model {
+    private final int medicineID;
 
-    //Todo
-    @Override
+    public Cure(int medicineID) {
+        this.medicineID = medicineID;
+    }
+
+    public int getMedicineID() { return this.medicineID; }
+
     public String[] tupleToListOfString() {
-        return new String[0];
+        String[] tupleValues = { String.valueOf(this.medicineID) };
+        return tupleValues;
     }
 
-    //Todo
-    @Override
     public String[] columnNameListOfString() {
-        return new String[0];
+
+        String[] columnNames = { "medicineID" };
+        return columnNames;
     }
-    // cure
 }

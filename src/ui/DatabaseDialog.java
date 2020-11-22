@@ -1,12 +1,14 @@
 package ui;
 
 import controller.VirusDatabase;
+import javafx.util.Pair;
 import model.*;
 
 import javax.swing.*;
 import javax.swing.text.DateFormatter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class DatabaseDialog extends JFrame {
@@ -242,7 +244,19 @@ public class DatabaseDialog extends JFrame {
         searchVirus.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                java.sql.Date startedAfter = java.sql.Date.valueOf(startedAfterField_Person.getText());
+                Date startedAfter = (Date)startedAfterField_Virus.getModel().getValue();
+
+                MedicineKills[] result = virusDatabase.searchVirus(startedAfter);
+                if (result.length != 0) {
+                    String[][] data = new String[result.length][];
+                    for (int i = 0; i < result.length; i++) {
+                        data[i] = result[i].tupleToListOfString();
+                    }
+                    String[] columnNames = result[0].columnNameListOfString();
+
+                    createSearchOutputDialog(data, columnNames);
+                }
+
             }
         });
         
