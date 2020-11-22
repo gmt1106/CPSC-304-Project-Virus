@@ -130,4 +130,10 @@ public class VirusDatabase {
         return dbHandler.searchCountryHasCure(nationality, sinum);
 
     }
+
+    public Person[] getNotInfectedInfo() {
+
+        return dbHandler.getNotInfectedInfo();
+
+    }
 }

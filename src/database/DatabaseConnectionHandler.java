@@ -1,6 +1,7 @@
 package database;
 
 
+import com.sun.tools.corba.se.idl.constExpr.Not;
 import javafx.util.Pair;
 import model.*;
 import oracle.jdbc.driver.SQLUtil;
@@ -529,5 +530,30 @@ public class DatabaseConnectionHandler {
         }
 
         return result.toArray(new CnameMedicineID[result.size()]);
+    }
+
+    public Person[] getNotInfectedInfo() {
+
+        ArrayList<Person> result = new ArrayList<Person>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT P.name, P.nationality, P.sinum FROM NotInfected N, Person P WHERE N.nationality = P.nationality AND N.sinum = P.sinum");
+
+            while(rs.next()) {
+                Person person = new Person(rs.getString("nationality"),
+                        rs.getInt("sinum"),
+                        rs.getString("name"));
+
+                result.add(person);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new Person[result.size()]);
     }
 }

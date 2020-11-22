@@ -57,6 +57,7 @@ public class DatabaseDialog extends JFrame {
     private JButton showRouteIDCountButton;
     private JButton showNationalityCountButton;
     private JButton searchCureButton;
+    private JButton showNotInfectedButton;
 
     public DatabaseDialog(VirusDatabase virusDatabase)  {
 
@@ -389,6 +390,21 @@ public class DatabaseDialog extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Kills[] result = virusDatabase.getCuresKillingVirus();
+                if (result.length != 0) {
+                    String[][] data = new String[result.length][];
+                    for (int i = 0; i < result.length; i++) {
+                        data[i] = result[i].tupleToListOfString();
+                    }
+                    String[] columnNames = result[0].columnNameListOfString();
+
+                    createSearchOutputDialog(data, columnNames);
+                }
+            }
+        });
+        showNotInfectedButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Person[] result = virusDatabase.getNotInfectedInfo();
                 if (result.length != 0) {
                     String[][] data = new String[result.length][];
                     for (int i = 0; i < result.length; i++) {
