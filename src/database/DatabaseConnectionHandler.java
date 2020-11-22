@@ -115,11 +115,16 @@ public class DatabaseConnectionHandler {
     public void insertPlace (Place place) {
         try {
 
-            //insert the routeID first in the Route table
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO Country VALUES (?)");
-            ps.setString(1, place.getCname());
+            //insert the country first in the Country table if does not exists
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Country WHERE name = " + "'" + place.getCname() + "'");
+            ResultSet rs = ps.executeQuery();
 
-            ps.executeUpdate();
+            if (!rs.next()) {
+                ps = connection.prepareStatement("INSERT INTO Country VALUES (?)");
+                ps.setString(1, place.getCname());
+
+                ps.executeUpdate();
+            }
 
             //Then insert the info into Place table
             ps = connection.prepareStatement("INSERT INTO Place VALUES (?,?,?,?,?)");
