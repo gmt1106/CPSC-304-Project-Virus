@@ -57,9 +57,9 @@ public class VirusDatabase {
 
     }
 
-    public Person[] searchPersonInfo(String nationality, int routeNum, Date startingAt, Date endingAt) {
+    public Person[] searchPersonInfo(int routeNum, Date startingAt, Date endingAt) {
 
-        return dbHandler.searchPersonInfo(nationality, routeNum, startingAt, endingAt);
+        return dbHandler.searchPersonInfo(routeNum, startingAt, endingAt);
 
     }
 
@@ -72,6 +72,18 @@ public class VirusDatabase {
     public Person[] searchNotInfectedButMightInfected() {
 
         return dbHandler.searchNotInfectedButMightInfected();
+
+    }
+
+    public void updateRoute(int sinum, int routeNum, Date startingAt, Date endingAt) {
+
+        dbHandler.updateRoute(sinum, routeNum, startingAt, endingAt);
+
+    }
+
+    public RoutePerson_WentAt[] getRoutePeopleInfo() {
+
+        return dbHandler.getRoutePeopleInfo();
 
     }
 }

@@ -46,6 +46,7 @@ public class DatabaseDialog extends JFrame {
     private JButton searchVirus;
     private JSpinner startedAfterField_Virus;
     private JButton SearchNotinfectedPeopleWhoWentToDangerousRouteButton;
+    private JButton showRoutesButton;
 
     public DatabaseDialog(VirusDatabase virusDatabase)  {
 
@@ -202,15 +203,11 @@ public class DatabaseDialog extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                String nationality = nationalityField_Person.getText();
                 int routeNum = Integer.parseInt(visitedRouteField_Person.getText());
-                Date startingAtJavaDate = (Date)startingAtField_Person.getModel().getValue();
-                Date endingAtJavaDate = (Date)endingAtField_Person.getModel().getValue();
+                Date startingAt = (Date)startingAtField_Person.getModel().getValue();
+                Date endingAt = (Date)endingAtField_Person.getModel().getValue();
 
-                java.sql.Date startingAt = new java.sql.Date(startingAtJavaDate.getTime());
-                java.sql.Date endingAt = new java.sql.Date(endingAtJavaDate.getTime());
-
-                Person[] result = virusDatabase.searchPersonInfo(nationality, routeNum, startingAt, endingAt);
+                Person[] result = virusDatabase.searchPersonInfo(routeNum, startingAt, endingAt);
                 if (result.length != 0) {
                     String[][] data = new String[result.length][];
                     for (int i = 0; i < result.length; i++) {
@@ -227,12 +224,15 @@ public class DatabaseDialog extends JFrame {
         updateRouteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                int sinum = Integer.parseInt(sinumField_Person.getText());
+                int routeNum = Integer.parseInt(visitedRouteField_Person.getText());
+                Date startingAt = (Date)startingAtField_Person.getModel().getValue();
+                Date endingAt = (Date)endingAtField_Person.getModel().getValue();
 
-//                String nationality = nationalityField_Person.getText();
-//                int visitedRoute = Integer.parseInt(visitedRouteField_Person.getText());
-//                java.sql.Date startingAt = java.sql.Date.valueOf(startingAtField_Person.getText());
-//                java.sql.Date endingAt = java.sql.Date.valueOf(endingAtField_Person.getText());
-//                int sinum = Integer.parseInt(sinumField_Person.getText());
+                virusDatabase.updateRoute(sinum, routeNum, startingAt, endingAt);
+
+                // Check if the data is successfully added by showing the place table
+                showPlaceTable.doClick();
 
             }
         });
@@ -249,6 +249,21 @@ public class DatabaseDialog extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 Person[] result = virusDatabase.searchNotInfectedButMightInfected();
+                if (result.length != 0) {
+                    String[][] data = new String[result.length][];
+                    for (int i = 0; i < result.length; i++) {
+                        data[i] = result[i].tupleToListOfString();
+                    }
+                    String[] columnNames = result[0].columnNameListOfString();
+
+                    createSearchOutputDialog(data, columnNames);
+                }
+            }
+        });
+        showRoutesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RoutePerson_WentAt[] result = virusDatabase.getRoutePeopleInfo();
                 if (result.length != 0) {
                     String[][] data = new String[result.length][];
                     for (int i = 0; i < result.length; i++) {

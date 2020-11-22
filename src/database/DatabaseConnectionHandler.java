@@ -245,14 +245,26 @@ public class DatabaseConnectionHandler {
         return result.toArray(new Place[result.size()]);
     }
 
-    public Person[] searchPersonInfo (String nationality, int routeNum, Date startingAt, Date endingAt) {
+    public Person[] searchPersonInfo (int routeNum, Date startingAt, Date endingAt) {
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String startingAtDateString = formatter.format(startingAt);
+        String endingAtDateString = formatter.format(endingAt);
         ArrayList<Person> result = new ArrayList<Person>();
 
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM Person P, RoutePerson_WentAt RW " +
-                    "WHERE P.nationality = RW.nationality AND P.sinum = RW.sinum AND RW.routeID = 5 AND RW.startTime >= '2020-05-01' AND RW.endTime <= '2020-05-20'");
+        System.out.println(routeNum);
+        System.out.println(startingAtDateString);
+        System.out.println(endingAtDateString);
 
+
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT P.nationality, P.sinum, P.name FROM Person P, RoutePerson_WentAt RW WHERE P.nationality = RW.nationality AND P.sinum = RW.sinum AND P.nationality = 'Canadian' AND RW.routeID = ? AND RW.startTime >= TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS') AND RW.endTime <= TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS')");
+
+            ps.setInt(1, routeNum);
+            ps.setString(2, startingAtDateString);
+            ps.setString(3, endingAtDateString);
+
+
+            ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 Person person = new Person(rs.getString("nationality"),
                         rs.getInt("sinum"), rs.getString("name"));
@@ -260,7 +272,7 @@ public class DatabaseConnectionHandler {
             }
 
             rs.close();
-            stmt.close();
+            ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
@@ -268,7 +280,36 @@ public class DatabaseConnectionHandler {
         return result.toArray(new Person[result.size()]);
     }
 
-    public void updateRoute (String nationality, int routeNum, Date startingAt, Date endingAt) {
+    public void updateRoute (int sinum, int routeNum, Date startingAt, Date endingAt) {
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String startingAtDateString = formatter.format(startingAt);
+        String endingAtDateString = formatter.format(endingAt);
+
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO Place VALUES (TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS'), TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS'))");
+
+            ps.setString(1, startingAtDateString);
+            ps.setString(2, endingAtDateString);
+
+            ps.executeUpdate();
+
+            ps = connection.prepareStatement("UPDATE RoutePerson_WentAt " +
+                    "SET startTime =  TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS'), endTime = TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS') " +
+                    "WHERE routeID = ? AND nationality = 'Canadian' AND sinum = ?");
+
+            ps.setString(1, startingAtDateString);
+            ps.setString(2, endingAtDateString);
+            ps.setInt(3, routeNum);
+            ps.setInt(4, sinum);
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
     }
 
     public Person[] searchNotInfectedButMightInfected () {
@@ -293,6 +334,29 @@ public class DatabaseConnectionHandler {
         }
 
         return result.toArray(new Person[result.size()]);
+    }
+
+    public RoutePerson_WentAt[] getRoutePeopleInfo() {
+
+        ArrayList<Person> result = new ArrayList<Person>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM RoutePerson_WentAt WHERE nationality = 'Canadian'");
+
+            while(rs.next()) {
+                RoutePerson_WentAt routeByPerson = new RoutePerson_WentAt(rs.getString("startTime"),
+                        rs.getInt("endTime"), rs.getString("routeID"), rs.getString("nationality"), rs.getInt("sinum"));
+                result.add(routeByPerson);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new RoutePerson_WentAt[result.size()]);
     }
 
 
