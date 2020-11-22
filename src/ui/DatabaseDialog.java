@@ -31,8 +31,6 @@ public class DatabaseDialog extends JFrame {
 
     //Country Table
     private JLabel country;
-    private JTextField nameTextFieldFromCountry;
-    private JButton submitCountryData;
     private JButton showCountryTable;
 
     //Person Table
@@ -108,16 +106,25 @@ public class DatabaseDialog extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 String name = nameTextFieldFromPlace.getText();
-                int houseNum = Integer.parseInt(houseNumTextFieldFromPlace.getText());
+                String houseNumString = houseNumTextFieldFromPlace.getText();
                 String streetName = streetNameTextFieldFromPlace.getText();
                 String postalCode = postalCodeTextFieldFromPlace.getText();
                 String cname = cnameTextFieldFromPlace.getText();
 
-                Place place = new Place(name, houseNum, streetName, postalCode, cname);
-                virusDatabase.insertPlace(place);
+                //check if the user put any input
+                if (name.isEmpty() || houseNumString.isEmpty() || streetName.isEmpty() || postalCode.isEmpty() || cname.isEmpty()) {
 
-                // Check if the data is successfully added by showing the place table
-                showPlaceTable.doClick();
+                    JOptionPane.showMessageDialog(null,"Please put all the data for Place.");
+                }
+                else {
+
+                    int houseNum = Integer.parseInt(houseNumString);
+                    Place place = new Place(name, houseNum, streetName, postalCode, cname);
+                    virusDatabase.insertPlace(place);
+
+                    // Check if the data is successfully added by showing the place table
+                    showPlaceTable.doClick();
+                }
             }
         });
 
@@ -136,13 +143,6 @@ public class DatabaseDialog extends JFrame {
 
                     createSearchOutputDialog(data, columnNames);
                 }
-            }
-        });
-
-        submitCountryData.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
             }
         });
 
