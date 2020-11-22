@@ -252,12 +252,6 @@ public class DatabaseConnectionHandler {
         String endingAtDateString = formatter.format(endingAt);
         ArrayList<Person> result = new ArrayList<Person>();
 
-        System.out.println("in searchPersonInfo");
-        System.out.println(nationality);
-        System.out.println(routeNum);
-        System.out.println(startingAtDateString);
-        System.out.println(endingAtDateString);
-
 
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT P.nationality, P.sinum, P.name FROM Person P, RoutePerson_WentAt RW WHERE P.nationality = RW.nationality AND P.sinum = RW.sinum AND P.nationality = 'Canadian' AND RW.routeID = ? AND RW.startTime >= TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS') AND RW.endTime <= TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS')");
@@ -290,40 +284,25 @@ public class DatabaseConnectionHandler {
         String endingAtDateString = formatter.format(endingAt);
 
         try {
-            System.out.println("in updateRoute");
-            System.out.println(nationality);
-            System.out.println(routeNum);
-            System.out.println(startingAtDateString);
-            System.out.println(endingAtDateString);
-
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Timeframe VALUES (TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS'), TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS'))");
 
             ps.setString(1, startingAtDateString);
             ps.setString(2, endingAtDateString);
 
-            System.out.println("before ex");
             ps.executeUpdate();
-            System.out.println("after ex");
 
             ps = connection.prepareStatement("UPDATE RoutePerson_WentAt " +
                     "SET startTime =  TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS'), endTime = TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS') " +
                     "WHERE routeID = ? AND nationality = 'Canadian' AND sinum = ?");
 
 
-            System.out.println("setString");
             ps.setString(1, startingAtDateString);
-            System.out.println(startingAtDateString);
             ps.setString(2, endingAtDateString);
-            System.out.println(endingAtDateString);
             ps.setInt(3, routeNum);
-            System.out.println(routeNum);
 //            ps.setString(4, nationality);
             ps.setInt(4, sinum);
-            System.out.println(sinum);
 
-            System.out.println("before ex");
             ps.executeUpdate();
-            System.out.println("after ex");
             connection.commit();
 
             ps.close();
