@@ -49,6 +49,14 @@ public class DatabaseDialog extends JFrame {
     private JButton showRoutesButton;
     private JTextField nationality_Person;
     private JButton showCuresButton;
+    private JTextField deleteRouteTextField;
+    private JButton deleteRouteButton;
+    private JButton showRouteButton;
+    private JButton showRouteIDCountButton;
+    private JButton showNationalityCountButton;
+    private JButton searchCureButton;
+    private JTextField joinNationalityField;
+    private JTextField joinSinumField;
 
     public DatabaseDialog(VirusDatabase virusDatabase)  {
 
@@ -100,6 +108,89 @@ public class DatabaseDialog extends JFrame {
         setSize(900, 900);
         setVisible(true);
 
+        searchCureButton.addActionListener((new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nationality = joinNationalityField.getText();
+                int sinum = Integer.parseInt(joinSinumField.getText());
+                CnameMedicineID[] result = virusDatabase.searchCountryHasCure(nationality, sinum);
+                if (result.length != 0) {
+                    String[][] data = new String[result.length][];
+                    for (int i = 0; i < result.length; i++) {
+                        data[i] = result[i].tupleToListOfString();
+                    }
+                    String[] columnNames = result[0].columnNameListOfString();
+
+                    createSearchOutputDialog(data, columnNames);
+                } else {
+                    JOptionPane.showMessageDialog(null,"No cure in the patient's country of residence");
+                }
+            }
+        }));
+
+        showRouteIDCountButton.addActionListener((new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RouteIDCount[] result = virusDatabase.getRouteIDCount();
+
+                if (result.length != 0) {
+                    String[][] data = new String[result.length][];
+                    for (int i = 0; i < result.length; i++) {
+                        data[i] = result[i].tupleToListOfString();
+                    }
+                    String[] columnNames = result[0].columnNameListOfString();
+
+                    createSearchOutputDialog(data, columnNames);
+                }
+            }
+        }));
+
+        showNationalityCountButton.addActionListener((new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                NationalityCount[] result = virusDatabase.getNationalityCount();
+
+                if (result.length != 0) {
+                    String[][] data = new String[result.length][];
+                    for (int i = 0; i < result.length; i++) {
+                        data[i] = result[i].tupleToListOfString();
+                    }
+                    String[] columnNames = result[0].columnNameListOfString();
+
+                    createSearchOutputDialog(data, columnNames);
+                }
+            }
+        }));
+
+        showRouteButton.addActionListener((new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Route[] result = virusDatabase.showRoute();
+
+                if (result.length != 0) {
+                    String[][] data = new String[result.length][];
+                    for (int i = 0; i < result.length; i++) {
+                        data[i] = result[i].tupleToListOfString();
+                    }
+                    String[] columnNames = result[0].columnNameListOfString();
+
+                    createSearchOutputDialog(data, columnNames);
+                }
+            }
+        }));
+
+        deleteRouteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    int routeID = Integer.parseInt(deleteRouteTextField.getText());
+                    virusDatabase.deleteRoute(routeID);
+                    showRouteButton.doClick();
+                } catch(Exception exception) {
+                    JOptionPane.showMessageDialog(null,"Please write a valid integer");
+                }
+            }
+        });
 
         submitPlaceData.addActionListener(new ActionListener() {
             @Override

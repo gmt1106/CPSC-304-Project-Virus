@@ -416,4 +416,118 @@ public class DatabaseConnectionHandler {
         return result.toArray(new Kills[result.size()]);
     }
 
+    public Route[] showRoute() {
+        ArrayList<Route> result = new ArrayList<Route>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Route");
+
+            while(rs.next()) {
+                Route route = new Route(rs.getInt("routeID"));
+                result.add(route);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new Route[result.size()]);
+    }
+
+    public void deleteRoute(int routeID) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM Route WHERE routeID = ?");
+
+            ps.setInt(1, routeID);
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount == 0) {
+                System.out.println(WARNING_TAG + " RouteID " + routeID + " does not exist!");
+            }
+            connection.commit();
+            ps.close();
+
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+    }
+
+    public RouteIDCount[] getRouteIDCount () {
+        ArrayList<RouteIDCount> result = new ArrayList<RouteIDCount>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT routeID, COUNT(*) FROM RoutePerson_WentAt GROUP BY routeID");
+
+            while(rs.next()) {
+                RouteIDCount routeIDCount = new RouteIDCount(rs.getInt("routeID"), rs.getInt("COUNT(*)"));
+                result.add(routeIDCount);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new RouteIDCount[result.size()]);
+    }
+
+    public NationalityCount[] getNationalityCount () {
+        ArrayList<NationalityCount> result = new ArrayList<NationalityCount>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT nationality, COUNT(*) FROM InfectedLivesIn GROUP BY nationality HAVING Count(*) > 1");
+
+            while(rs.next()) {
+                NationalityCount nationalityCountCount = new NationalityCount(rs.getString("nationality"), rs.getInt("COUNT(*)"));
+                result.add(nationalityCountCount);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new NationalityCount[result.size()]);
+    }
+
+    public CnameMedicineID[] searchCountryHasCure (String nationality, int sinum) {
+
+        ArrayList<CnameMedicineID> result = new ArrayList<CnameMedicineID>();
+
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT H.cname, H.medicineID FROM InfectedLivesIn IL, Kills K, Has H, Infects I WHERE IL.nationality = ? AND IL.sinum = ? AND IL.cname = H.cname AND IL.nationality = I.nationality AND IL.sinum = I.sinum AND H.medicineID = K.medicineID AND I.virusID = K.virusID");
+            int l = nationality.length();
+            if(nationality.length() != 20) {
+                for (int i = 0; i < 20 - l; i++) {
+                    nationality += " ";
+                }
+            }
+
+            ps.setString(1, nationality);
+            ps.setInt(2, sinum);
+
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                CnameMedicineID cnameMedicineID = new CnameMedicineID(rs.getString(1),
+                        rs.getInt(2));
+                result.add(cnameMedicineID);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new CnameMedicineID[result.size()]);
+    }
 }

@@ -100,4 +100,34 @@ public class VirusDatabase {
         return dbHandler.getCuresKillingVirus();
 
     }
+
+    public Route[] showRoute() {
+
+        return dbHandler.showRoute();
+
+    }
+
+    public void deleteRoute(int routeID) {
+
+        dbHandler.deleteRoute(routeID);
+
+    }
+
+    public RouteIDCount[] getRouteIDCount() {
+
+        return dbHandler.getRouteIDCount();
+
+    }
+
+    public NationalityCount[] getNationalityCount() {
+
+        return dbHandler.getNationalityCount();
+
+    }
+
+    public CnameMedicineID[] searchCountryHasCure(String nationality, int sinum) {
+
+        return dbHandler.searchCountryHasCure(nationality, sinum);
+
+    }
 }
