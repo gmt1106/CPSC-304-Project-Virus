@@ -47,6 +47,7 @@ public class DatabaseDialog extends JFrame {
     private JSpinner startedAfterField_Virus;
     private JButton SearchNotinfectedPeopleWhoWentToDangerousRouteButton;
     private JButton showRoutesButton;
+    private JTextField nationality_Person;
 
     public DatabaseDialog(VirusDatabase virusDatabase)  {
 
@@ -202,12 +203,12 @@ public class DatabaseDialog extends JFrame {
         searchPerson.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                String nationality = nationality_Person.getText();
                 int routeNum = Integer.parseInt(visitedRouteField_Person.getText());
                 Date startingAt = (Date)startingAtField_Person.getModel().getValue();
                 Date endingAt = (Date)endingAtField_Person.getModel().getValue();
 
-                Person[] result = virusDatabase.searchPersonInfo(routeNum, startingAt, endingAt);
+                Person[] result = virusDatabase.searchPersonInfo(nationality, routeNum, startingAt, endingAt);
                 if (result.length != 0) {
                     String[][] data = new String[result.length][];
                     for (int i = 0; i < result.length; i++) {
@@ -224,15 +225,16 @@ public class DatabaseDialog extends JFrame {
         updateRouteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String nationality = nationality_Person.getText();
                 int sinum = Integer.parseInt(sinumField_Person.getText());
                 int routeNum = Integer.parseInt(visitedRouteField_Person.getText());
                 Date startingAt = (Date)startingAtField_Person.getModel().getValue();
                 Date endingAt = (Date)endingAtField_Person.getModel().getValue();
 
-                virusDatabase.updateRoute(sinum, routeNum, startingAt, endingAt);
+                virusDatabase.updateRoute(nationality, sinum, routeNum, startingAt, endingAt);
 
                 // Check if the data is successfully added by showing the place table
-                showPlaceTable.doClick();
+                showRoutesButton.doClick();
 
             }
         });
@@ -260,6 +262,7 @@ public class DatabaseDialog extends JFrame {
                 }
             }
         });
+
         showRoutesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

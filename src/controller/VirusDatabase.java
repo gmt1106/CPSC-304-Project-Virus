@@ -57,9 +57,9 @@ public class VirusDatabase {
 
     }
 
-    public Person[] searchPersonInfo(int routeNum, Date startingAt, Date endingAt) {
+    public Person[] searchPersonInfo(String nationality, int routeNum, Date startingAt, Date endingAt) {
 
-        return dbHandler.searchPersonInfo(routeNum, startingAt, endingAt);
+        return dbHandler.searchPersonInfo(nationality, routeNum, startingAt, endingAt);
 
     }
 
@@ -75,9 +75,9 @@ public class VirusDatabase {
 
     }
 
-    public void updateRoute(int sinum, int routeNum, Date startingAt, Date endingAt) {
+    public void updateRoute(String nationality, int sinum, int routeNum, Date startingAt, Date endingAt) {
 
-        dbHandler.updateRoute(sinum, routeNum, startingAt, endingAt);
+        dbHandler.updateRoute(nationality, sinum, routeNum, startingAt, endingAt);
 
     }
 
