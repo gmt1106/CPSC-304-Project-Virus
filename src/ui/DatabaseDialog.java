@@ -52,11 +52,11 @@ public class DatabaseDialog extends JFrame {
     private JTextField deleteRouteTextField;
     private JButton deleteRouteButton;
     private JButton showRouteButton;
+    private JTextField joinNationalityField;
+    private JTextField joinSinumField;
     private JButton showRouteIDCountButton;
     private JButton showNationalityCountButton;
     private JButton searchCureButton;
-    private JTextField joinNationalityField;
-    private JTextField joinSinumField;
 
     public DatabaseDialog(VirusDatabase virusDatabase)  {
 
