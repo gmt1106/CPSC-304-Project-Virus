@@ -1,3 +1,5 @@
+DROP TABLE Has;
+DROP TABLE Infects;
 DROP TABLE Includes;
 DROP TABLE Place;
 DROP TABLE InfectedLivesIn;
@@ -10,7 +12,6 @@ DROP TABLE Route;
 DROP TABLE Kills;
 DROP TABLE Cure;
 DROP TABLE Virus;
-
 
 
 CREATE TABLE Country (
@@ -64,7 +65,7 @@ CREATE TABLE RoutePerson_WentAt(
 	sinum INTEGER,
 	PRIMARY KEY (routeID, nationality, sinum),
 	FOREIGN KEY (startTime, endTime) REFERENCES Timeframe (startTime, endTime) ON DELETE CASCADE,
-	FOREIGN KEY (routeID) REFERENCES Route (routeID),
+	FOREIGN KEY (routeID) REFERENCES Route (routeID) ON DELETE CASCADE,
 	FOREIGN KEY (nationality, sinum) REFERENCES Person (nationality, sinum) ON DELETE CASCADE
 );
 
@@ -102,7 +103,28 @@ CREATE TABLE Kills (
     FOREIGN KEY (virusID) REFERENCES  Virus ON DELETE cascade
 );
 
+CREATE TABLE Has (
+    cname char(10),
+    medicineID int,
+    PRIMARY KEY (cname, medicineID),
+    FOREIGN KEY (cname) REFERENCES Country (name) ON DELETE cascade,
+    FOREIGN KEY (medicineID) REFERENCES Cure ON DELETE cascade
+);
+
+CREATE TABLE Infects (
+    virusID int,
+    nationality char(20),
+    sinum int,
+	PRIMARY KEY (virusID, nationality, sinum),
+	FOREIGN KEY (virusID) REFERENCES Virus ON DELETE cascade,
+    FOREIGN KEY (nationality, sinum) REFERENCES InfectedLivesIn ON DELETE cascade
+);
+
 INSERT INTO Country VALUES ('Canada');
+
+INSERT INTO Country VALUES ('America');
+
+INSERT INTO Country VALUES ('Denmark');
 
 INSERT INTO Place VALUES ('UBC Nest', 6133, 'University Blvd', 'V6T 1Z1', 'Canada');
 
@@ -146,6 +168,10 @@ Values (2000, 'Airport Rd NE', 'T2E 6W5', 'Canada', 47, TO_TIMESTAMP('2020-05-17
 INSERT INTO Person Values ('Canadian', 11111111, 'John Smith');
 
 INSERT INTO Person Values ('American', 11111111, 'Daniel Jones');
+
+INSERT INTO Person Values ('American', 22222222, 'Andrew Thomas');
+
+INSERT INTO Person Values ('Italian', 22222222, 'Darius Slayton');
 
 INSERT INTO Person Values ('Portuguese', 22222222, 'Christiano Ronaldo');
 
@@ -221,6 +247,10 @@ INSERT INTO InfectedLivesIn VALUES ('Canadian', 11111111, 'Canada');
 
 INSERT INTO InfectedLivesIn VALUES ('American', 11111111, 'Canada');
 
+INSERT INTO InfectedLivesIn VALUES ('American', 22222222, 'America');
+
+INSERT INTO InfectedLivesIn VALUES ('Italian', 22222222, 'Denmark');
+
 INSERT INTO InfectedLivesIn VALUES ('Italian', 66666666, 'Canada');
 
 INSERT INTO InfectedLivesIn VALUES ('French', 77777777, 'Canada');
@@ -274,6 +304,22 @@ INSERT INTO Kills Values (8164182, 8164182);
 INSERT INTO Kills Values (986521065, 131222);
 
 INSERT INTO Kills Values (986521065, 7788453);
+
+INSERT INTO Has Values ('Canada', 645132582);
+
+INSERT INTO Has Values ('Canada', 461330224);
+
+INSERT INTO Infects Values (8164182, 'Canadian', 11111111);
+
+INSERT INTO Infects Values (843218, 'Canadian', 11111111);
+
+INSERT INTO Infects Values (131222, 'Italian', 22222222);
+
+INSERT INTO Infects Values (843218, 'American', 22222222);
+
+INSERT INTO Infects Values (7788453, 'American', 22222222);
+
+INSERT INTO Infects Values (8164182, 'American', 22222222);
 
 
 
