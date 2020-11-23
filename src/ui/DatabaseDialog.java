@@ -312,8 +312,9 @@ public class DatabaseDialog extends JFrame {
                     String[] columnNames = result[0].columnNameListOfString();
 
                     createSearchOutputDialog(data, columnNames);
+                } else {
+                    JOptionPane.showMessageDialog(null,"No person with those traits in the database is available.");
                 }
-
             }
         });
 
@@ -348,6 +349,8 @@ public class DatabaseDialog extends JFrame {
                     String[] columnNames = result[0].columnNameListOfString();
 
                     createSearchOutputDialog(data, columnNames);
+                } else {
+                    JOptionPane.showMessageDialog(null,"Such cures do not exist.");
                 }
 
             }
@@ -398,6 +401,8 @@ public class DatabaseDialog extends JFrame {
                     String[] columnNames = result[0].columnNameListOfString();
 
                     createSearchOutputDialog(data, columnNames);
+                } else {
+                    JOptionPane.showMessageDialog(null,"No cures can be found.");
                 }
             }
         });

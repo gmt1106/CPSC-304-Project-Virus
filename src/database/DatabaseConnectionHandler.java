@@ -260,12 +260,18 @@ public class DatabaseConnectionHandler {
 
 
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT P.nationality, P.sinum, P.name FROM Person P, RoutePerson_WentAt RW WHERE P.nationality = RW.nationality AND P.sinum = RW.sinum AND P.nationality = 'Canadian' AND RW.routeID = ? AND RW.startTime >= TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS') AND RW.endTime <= TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS')");
+            PreparedStatement ps = connection.prepareStatement("SELECT P.nationality, P.sinum, P.name FROM Person P, RoutePerson_WentAt RW WHERE P.nationality = RW.nationality AND P.sinum = RW.sinum AND P.nationality = ? AND RW.routeID = ? AND RW.startTime >= TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS') AND RW.endTime <= TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS')");
 
-//            ps.setString(1, nationality);
-            ps.setInt(1, routeNum);
-            ps.setString(2, startingAtDateString);
-            ps.setString(3, endingAtDateString);
+            int l = nationality.length();
+            if(nationality.length() != 20) {
+                for (int i = 0; i < 20 - l; i++) {
+                    nationality += " ";
+                }
+            }
+            ps.setString(1, nationality);
+            ps.setInt(2, routeNum);
+            ps.setString(3, startingAtDateString);
+            ps.setString(4, endingAtDateString);
 
 
             ResultSet rs = ps.executeQuery();
@@ -299,14 +305,20 @@ public class DatabaseConnectionHandler {
 
             ps = connection.prepareStatement("UPDATE RoutePerson_WentAt " +
                     "SET startTime =  TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS'), endTime = TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS') " +
-                    "WHERE routeID = ? AND nationality = 'Canadian' AND sinum = ?");
+                    "WHERE routeID = ? AND nationality = ? AND sinum = ?");
 
 
+            int l = nationality.length();
+            if (nationality.length() != 20) {
+                for (int i = 0; i < 20 - l; i++) {
+                    nationality += " ";
+                }
+            }
             ps.setString(1, startingAtDateString);
             ps.setString(2, endingAtDateString);
             ps.setInt(3, routeNum);
-//            ps.setString(4, nationality);
-            ps.setInt(4, sinum);
+            ps.setString(4, nationality);
+            ps.setInt(5, sinum);
 
             ps.executeUpdate();
             connection.commit();
