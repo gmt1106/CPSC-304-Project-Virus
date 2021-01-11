@@ -11,3 +11,4 @@ This database organizes the routes that the infected and not infected people too
 
 
 ## ER Diagram 
+![](ER_diagram/CPSC_304_Project.png)
