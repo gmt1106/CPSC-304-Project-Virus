@@ -1,4 +1,4 @@
-# CPSC-304-Project-Virus
+# Virus Database 
 
 ## Project Description
 The domain that we are going to model is pandemic monitoring. More specifically, the model shows the current and past situations where there have/had been a pandemic. 
